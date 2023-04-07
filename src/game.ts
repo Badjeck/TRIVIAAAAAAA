@@ -11,11 +11,11 @@ export class Game {
     private console: IConsole;
   
     constructor(console : IConsole, isTechnoEnabled = false) {
-        this.questions = new Questions(50);
+        this.questions = new Questions(50, console);
         this.console = console;
         this.playerPool = new PlayerPool();
         this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
-
+    }
     public addPlayer(name: string): boolean {
         return this.playerPool.addPlayer(name)
     }

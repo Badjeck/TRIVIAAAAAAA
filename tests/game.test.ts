@@ -51,8 +51,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console, true);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -64,8 +64,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
