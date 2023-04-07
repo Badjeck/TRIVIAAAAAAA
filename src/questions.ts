@@ -6,13 +6,18 @@ export class Questions {
     private _scienceQuestions: Array<string> = [];
     private _sportsQuestions: Array<string> = [];
     private _rockQuestions: Array<string> = [];
+    private _technoQuestions: Array<string> = [];
+    private _isTechnoQuestionsEnabled: boolean = false;
 
     constructor(nbQuestions:number, console : IConsole) {
         for (let i = 0; i < nbQuestions; i++) {
             this.addPopQuestion(i)
             this.addScienceQuestion(i);
             this.addSportsQuestion(i);
-            this.addRockQuestion(i);
+            if (this._isTechnoQuestionsEnabled)
+                this.addTechnoQuestion(i);
+            else
+                this.addRockQuestion(i);
         }
 
         this.console = console;
@@ -50,6 +55,22 @@ export class Questions {
         return this._rockQuestions.shift()
     }
 
+    public getIsTechnoQuestionsEnabled(): boolean{
+        return this._isTechnoQuestionsEnabled;
+    }
+
+    public setIsTechnoQuestionsEnabled(value: boolean): void {
+        this._isTechnoQuestionsEnabled = value;
+    }
+
+    public addTechnoQuestion(index: number){
+        this._technoQuestions.push("Techno Question " + index)
+    }
+
+    public shiftTechnoQuestion() {
+        return this._technoQuestions.shift();
+    }
+
     public askQuestion(category: String): void {
         if (category == 'Pop')
             this.console.log(this.shiftPopQuestion());
@@ -58,6 +79,8 @@ export class Questions {
         if (category == 'Sports')
             this.console.log(this.shiftSportsQuestion());
         if (category == 'Rock')
-            this.console.log(this.shiftRockQuestion());
+            console.log(this.shiftRockQuestion());
+        if (category == 'Techno')
+            console.log(this.shiftTechnoQuestion());
     }
 }

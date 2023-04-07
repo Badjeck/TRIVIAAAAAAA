@@ -9,12 +9,12 @@ export class Game {
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
-
-    constructor(console : IConsole) {
+  
+    constructor(console : IConsole, isTechnoEnabled = false) {
+        this.questions = new Questions(50);
         this.console = console;
-        this.questions = new Questions(50, console);
         this.playerPool = new PlayerPool();
-    }
+        this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
 
     public addPlayer(name: string): boolean {
         return this.playerPool.addPlayer(name)
@@ -76,6 +76,8 @@ export class Game {
             return 'Sports';
         if (this.playerPool.getCurrentPlayerPlaces() == 10)
             return 'Sports';
+        if (this.questions.getIsTechnoQuestionsEnabled())
+            return 'Techno';
         return 'Rock';
     }
 
