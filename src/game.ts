@@ -1,4 +1,5 @@
 import {IConsole} from "./Utils/IConsole";
+import {Questions} from "./questions";
 
 export class Game {
 
@@ -8,28 +9,14 @@ export class Game {
     private inPenaltyBox: Array<boolean> = [];
     private currentPlayer: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
-
-    private popQuestions: Array<string> = [];
-    private scienceQuestions: Array<string> = [];
-    private sportsQuestions: Array<string> = [];
-    private rockQuestions: Array<string> = [];
+    private questions: Questions;
 
     private iConsole: IConsole;
 
     constructor(iConsole : IConsole) {
 
         this.iConsole = iConsole;
-
-        for (let i = 0; i < 50; i++) {
-            this.popQuestions.push("Pop Question " + i);
-            this.scienceQuestions.push("Science Question " + i);
-            this.sportsQuestions.push("Sports Question " + i);
-            this.rockQuestions.push(this.createRockQuestion(i));
-          }
-    }
-
-    private createRockQuestion(index: number): string {
-        return "Rock Question " + index;
+        this.questions = new Questions(50);
     }
 
     public add(name: string): boolean {
@@ -64,7 +51,7 @@ export class Game {
     
             console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
             console.log("The category is " + this.currentCategory());
-            this.askQuestion();
+            this.questions.askQuestion(this.currentCategory());
           } else {
             console.log(this.players[this.currentPlayer] + " is not getting out of the penalty box");
             this.isGettingOutOfPenaltyBox = false;
@@ -78,19 +65,8 @@ export class Game {
     
           console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
           console.log("The category is " + this.currentCategory());
-          this.askQuestion();
+          this.questions.askQuestion(this.currentCategory());
         }
-    }
-
-    private askQuestion(): void {
-        if (this.currentCategory() == 'Pop')
-            console.log(this.popQuestions.shift());
-        if (this.currentCategory() == 'Science')
-            console.log(this.scienceQuestions.shift());
-        if (this.currentCategory() == 'Sports')
-            console.log(this.sportsQuestions.shift());
-        if (this.currentCategory() == 'Rock')
-            console.log(this.rockQuestions.shift());
     }
 
     private currentCategory(): string {

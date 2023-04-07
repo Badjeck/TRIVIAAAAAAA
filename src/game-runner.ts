@@ -2,7 +2,7 @@ import {Game} from './game';
 
 export class GameRunner {
     public static main(): void {
-        const game = new Game();
+        const game = new Game(console);
         game.add("Chet");
         game.add("Pat");
         game.add("Sue");
