@@ -5,7 +5,7 @@ export class Game {
     private players: Array<string> = [];
     private playersLocation: Array<number> = [];
     private playersPurse: Array<number> = [];
-    private isPlayerInPenaltyBox: Array<boolean> = [];
+    private playerInPenaltyBox: Array<boolean> = [];
     private currentPlayerIndex: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
 
@@ -36,7 +36,7 @@ export class Game {
         this.players.push(player);
         this.playersLocation[this.howManyPlayers()] = 0;
         this.playersPurse[this.howManyPlayers()] = 0;
-        this.isPlayerInPenaltyBox[this.howManyPlayers()] = false;
+        this.playerInPenaltyBox[this.howManyPlayers()] = false;
 
         console.log(player + " was added");
         console.log("They are player number " + this.players.length);
@@ -52,7 +52,7 @@ export class Game {
         console.log(this.players[this.currentPlayerIndex] + " is the current player");
         console.log("They have rolled a " + roll);
     
-        if (this.isPlayerInPenaltyBox[this.currentPlayerIndex]) {
+        if (this.playerInPenaltyBox[this.currentPlayerIndex]) {
           if (roll % 2 != 0) {
             this.isGettingOutOfPenaltyBox = true;
     
@@ -122,7 +122,7 @@ export class Game {
     public wrongAnswer(): boolean {
         console.log('Question was incorrectly answered');
         console.log(this.players[this.currentPlayerIndex] + " was sent to the penalty box");
-        this.isPlayerInPenaltyBox[this.currentPlayerIndex] = true;
+        this.playerInPenaltyBox[this.currentPlayerIndex] = true;
     
         this.currentPlayerIndex += 1;
         if (this.currentPlayerIndex == this.players.length)
@@ -131,7 +131,7 @@ export class Game {
     }
 
     public wasCorrectlyAnswered(): boolean {
-        if (this.isPlayerInPenaltyBox[this.currentPlayerIndex]) {
+        if (this.playerInPenaltyBox[this.currentPlayerIndex]) {
             if (this.isGettingOutOfPenaltyBox) {
               console.log('Answer was correct!!!!');
               this.playersPurse[this.currentPlayerIndex] += 1;
