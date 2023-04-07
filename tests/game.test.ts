@@ -46,4 +46,24 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).to.throw(Error)
     })
+
+    it('player should leave prison', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.add(player))
+
+        game.roll(4)
+        game.wrongAnswer()
+
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
+        expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
+
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+        game.roll(5)
+
+        expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
+    });
 });
