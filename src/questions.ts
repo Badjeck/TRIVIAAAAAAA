@@ -9,7 +9,9 @@ export class Questions {
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
 
-    constructor(nbQuestions:number, console : IConsole) {
+    constructor(nbQuestions:number, console : IConsole, isTechnoQuestions) {
+        this._isTechnoQuestionsEnabled = isTechnoQuestions;
+
         for (let i = 0; i < nbQuestions; i++) {
             this.addPopQuestion(i)
             this.addScienceQuestion(i);
@@ -79,8 +81,8 @@ export class Questions {
         if (category == 'Sports')
             this.console.log(this.shiftSportsQuestion());
         if (category == 'Rock')
-            console.log(this.shiftRockQuestion());
+            this.console.log(this.shiftRockQuestion());
         if (category == 'Techno')
-            console.log(this.shiftTechnoQuestion());
+            this.console.log(this.shiftTechnoQuestion());
     }
 }

@@ -13,9 +13,8 @@ export class Game {
 
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;
-        this.questions = new Questions(50, console);
-        this.playerPool = new PlayerPool();
-        this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
+        this.questions = new Questions(50, console, isTechnoEnabled);
+        this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
     }
 
@@ -79,7 +78,7 @@ export class Game {
             return 'Sports';
         if (this.playerPool.getCurrentPlayerPlaces() == 10)
             return 'Sports';
-        if (this.questions.getIsTechnoQuestionsEnabled() == true)
+        if (this.questions.getIsTechnoQuestionsEnabled())
             return 'Techno';
         return 'Rock';
     }
@@ -92,7 +91,7 @@ export class Game {
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
-
+    
         this.playerPool.changeCurrentPlayer();
 
         return true;
