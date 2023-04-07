@@ -79,8 +79,8 @@ export class Questions {
         if (category == 'Sports')
             this.console.log(this.shiftSportsQuestion());
         if (category == 'Rock')
-            console.log(this.shiftRockQuestion());
+            this.console.log(this.shiftRockQuestion());
         if (category == 'Techno')
-            console.log(this.shiftTechnoQuestion());
+            this.console.log(this.shiftTechnoQuestion());
     }
 }

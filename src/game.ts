@@ -14,7 +14,7 @@ export class Game {
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;
         this.questions = new Questions(50, console);
-        this.playerPool = new PlayerPool();
+        this.playerPool = new PlayerPool(console);
         this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
         this.setGoldRequiredToWin(goldRequiredToWin)
     }
