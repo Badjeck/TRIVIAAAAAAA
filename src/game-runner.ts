@@ -1,8 +1,11 @@
 import {Game} from './game';
+import {IConsole} from "./Utils/IConsole";
 
 export class GameRunner {
+
     public static main(): void {
-        const game = new Game();
+        const iConsole : IConsole;
+        const game = new Game(iConsole);
         game.add("Chet");
         game.add("Pat");
         game.add("Sue");
