@@ -4,6 +4,7 @@ import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
+import {Questions} from "../src/questions";
 
 describe('The test environment', () => {
     it('should pass', () => {
@@ -113,7 +114,7 @@ describe('The test environment', () => {
         // @ts-ignore
         expect(consoleSpy.content).to.includes("Ed leaves the game")
     });
-
+    
     it('player should leave prison', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
@@ -136,6 +137,20 @@ describe('The test environment', () => {
         expect(game.getIsGettingOutOfPenaltyBox()).to.equals(true)
         expect(game.getInPenaltyBox()[0]).to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
+    });
+
+    it('should have a infinite deck', function () {
+        const consoleSpy = new ConsoleSpy();
+        let index = 0;
+
+        const questions = new Questions(consoleSpy, 50)
+
+        while (index < 1000) {
+            questions.askQuestion('Pop')
+            expect(consoleSpy.content).to.not.includes("undefined")
+
+            index++
+        }
     });
 
     it('game should run until player reach gold required to win', () => {

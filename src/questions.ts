@@ -6,6 +6,7 @@ export class Questions {
     private _scienceQuestions: Array<string> = [];
     private _sportsQuestions: Array<string> = [];
     private _rockQuestions: Array<string> = [];
+    private console: IConsole;
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
 
