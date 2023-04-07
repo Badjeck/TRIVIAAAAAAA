@@ -57,6 +57,8 @@ describe('The test environment', () => {
         game.roll(4)
         game.wrongAnswer()
 
+        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(false)
+        expect(game.getInPenaltyBox()[0]).to.equals(true)
         expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
         expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
 
@@ -64,6 +66,8 @@ describe('The test environment', () => {
         game.wasCorrectlyAnswered()
         game.roll(5)
 
+        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(true)
+        expect(game.getInPenaltyBox()[0]).to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
     });
 });

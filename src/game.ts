@@ -132,4 +132,14 @@ export class Game {
         } else if(this.playerPool.howManyPlayers() > 6)
             throw new TooManyPlayerError();
     }
+
+    public getInPenaltyBox(): boolean[]
+    {
+        return this.inPenaltyBox
+    }
+
+    public getIsGettingOutOfPenaltyBox(): boolean
+    {
+        return this.isGettingOutOfPenaltyBox
+    }
 }
