@@ -43,6 +43,19 @@ describe('The test environment', () => {
         expect(() => game.roll(5)).to.throw(Error)
     })
 
+    it("should not use joker if player has no joker", () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+
+        game.roll(3);
+        game.useJoker();
+
+        expect(consoleSpy.content).not.to.include("has used their Joker");
+    });
+
     it("should ask techno questions if techno questions are enabled", () => {
         const console = new ConsoleSpy();
         const game = new Game(console, true);
@@ -225,4 +238,16 @@ describe('The test environment', () => {
         expect(consoleSpy.content).to.includes("Pet now has gain 2 Gold Coin(s) with 1 bonus Gold Coin(s) with the win in a row, Pet now has 3 Gold Coin(s).");
 
     })
+    it("should not use joker if player has no joker", () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+
+        game.roll(3);
+        game.useJoker();
+
+        expect(consoleSpy.content).not.to.include("has used their Joker");
+    });
 });
