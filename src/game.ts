@@ -2,13 +2,9 @@ import {IConsole} from "./Utils/IConsole";
 import {Questions} from "./questions";
 import {NotEnoughPlayerError} from "./errors/NotEnoughPlayerError";
 import {TooManyPlayerError} from "./errors/TooManyPlayerError";
+import {PlayerPool} from "./playerPool";
 
 export class Game {
-
-    private players: Array<string> = [];
-    private places: Array<number> = [];
-    private purses: Array<number> = [];
-    private inPenaltyBox: Array<boolean> = [];
     private currentPlayer: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
@@ -135,11 +131,11 @@ export class Game {
 
     public getInPenaltyBox(): boolean[]
     {
-        return this.inPenaltyBox
+        return this.playerPool.inPenaltyBox
     }
 
     public getIsGettingOutOfPenaltyBox(): boolean
     {
-        return this.isGettingOutOfPenaltyBox
+        return this.playerPool.isGettingOutOfPenaltyBox
     }
 }

@@ -20,11 +20,11 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).to.throw(Error)
 
-        game.add('Pet')
+        game.addPlayer('Pet')
 
         expect(() => game.roll(5)).to.throw(Error)
 
-        game.add('Ed')
+        game.addPlayer('Ed')
 
         expect(() => game.roll(5)).not.to.throw(Error)
     })
@@ -34,15 +34,15 @@ describe('The test environment', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
 
-        game.add('Pet')
-        game.add('Ed')
-        game.add('Chat')
-        game.add('Dog')
-        game.add('Horse')
-        game.add('Monkey')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+        game.addPlayer('Chat')
+        game.addPlayer('Dog')
+        game.addPlayer('Horse')
+        game.addPlayer('Monkey')
         expect(() => game.roll(5)).not.to.throw(Error)
 
-        game.add('Luffy')
+        game.addPlayer('Luffy')
 
         expect(() => game.roll(5)).to.throw(Error)
     })
@@ -52,7 +52,7 @@ describe('The test environment', () => {
         const game = new Game(consoleSpy);
         const players: string[] = ['Pet', 'Ed']
 
-        players.forEach((player) => game.add(player))
+        players.forEach((player) => game.addPlayer(player))
 
         game.roll(4)
         game.wrongAnswer()

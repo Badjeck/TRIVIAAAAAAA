@@ -5,7 +5,7 @@ export class PlayerPool {
     private _purses: Array<number> = [];
     private _inPenaltyBox: Array<boolean> = [];
     private _currentPlayer: number = 0;
-    private _isGettingOutOfPenaltyBox: Boolean = false;
+    private _isGettingOutOfPenaltyBox: boolean = false;
 
     constructor() {
     }
@@ -35,11 +35,11 @@ export class PlayerPool {
         this._currentPlayer = value;
     }
 
-    get isGettingOutOfPenaltyBox(): Boolean {
+    get isGettingOutOfPenaltyBox(): boolean {
         return this._isGettingOutOfPenaltyBox;
     }
 
-    set isGettingOutOfPenaltyBox(value: Boolean) {
+    set isGettingOutOfPenaltyBox(value: boolean) {
         this._isGettingOutOfPenaltyBox = value;
     }
 
