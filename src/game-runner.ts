@@ -1,4 +1,5 @@
 import {Game} from './game';
+import {ConsoleSpy} from "./Utils/ConsoleSpy";
 
 export class GameRunner {
     public static main(): void {
