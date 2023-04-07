@@ -4,7 +4,7 @@ export class Game {
 
     private players: Array<string> = [];
     private places: Array<number> = [];
-    private playerPurse: Array<number> = [];
+    private playersPurse: Array<number> = [];
     private isPlayerInPenaltyBox: Array<boolean> = [];
     private currentPlayerIndex: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
@@ -35,7 +35,7 @@ export class Game {
     public add(player: string): boolean {
         this.players.push(player);
         this.places[this.howManyPlayers()] = 0;
-        this.playerPurse[this.howManyPlayers()] = 0;
+        this.playersPurse[this.howManyPlayers()] = 0;
         this.isPlayerInPenaltyBox[this.howManyPlayers()] = false;
 
         console.log(player + " was added");
@@ -116,7 +116,7 @@ export class Game {
     }
 
     private didPlayerWin(): boolean {
-        return !(this.playerPurse[this.currentPlayerIndex] == 6)
+        return !(this.playersPurse[this.currentPlayerIndex] == 6)
     }
 
     public wrongAnswer(): boolean {
@@ -134,9 +134,9 @@ export class Game {
         if (this.isPlayerInPenaltyBox[this.currentPlayerIndex]) {
             if (this.isGettingOutOfPenaltyBox) {
               console.log('Answer was correct!!!!');
-              this.playerPurse[this.currentPlayerIndex] += 1;
+              this.playersPurse[this.currentPlayerIndex] += 1;
               console.log(this.players[this.currentPlayerIndex] + " now has " +
-              this.playerPurse[this.currentPlayerIndex] + " Gold Coins.");
+              this.playersPurse[this.currentPlayerIndex] + " Gold Coins.");
       
               let winner : boolean = this.didPlayerWin();
               this.currentPlayerIndex += 1;
@@ -156,9 +156,9 @@ export class Game {
       
             console.log("Answer was correct!!!!");
       
-            this.playerPurse[this.currentPlayerIndex] += 1;
+            this.playersPurse[this.currentPlayerIndex] += 1;
             console.log(this.players[this.currentPlayerIndex] + " now has " +
-                this.playerPurse[this.currentPlayerIndex] + " Gold Coins.");
+                this.playersPurse[this.currentPlayerIndex] + " Gold Coins.");
 
             let winner : boolean = this.didPlayerWin();
 
