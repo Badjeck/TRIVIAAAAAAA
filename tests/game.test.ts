@@ -52,15 +52,15 @@ describe('The test environment', () => {
         const game = new Game(consoleSpy);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
-        players.forEach((player) => game.add(player))
+        players.forEach((player) => game.addPlayer(player))
 
         game.roll(4)
 
         game.makeThePlayerQuit()
 
-        assert.notInclude(game.getPlayers(), players[0])
-        assert.include(game.getPlayers(), players[1])
-        assert.include(game.getPlayers(), players[2])
+        assert.notInclude(game.getPlayerPool().players, players[0])
+        assert.include(game.getPlayerPool().players, players[1])
+        assert.include(game.getPlayerPool().players, players[2])
 
         // @ts-ignore
         expect(consoleSpy.content).to.includes("Pet leaves the game")
@@ -71,19 +71,19 @@ describe('The test environment', () => {
         const game = new Game(consoleSpy);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
-        players.forEach((player) => game.add(player))
+        players.forEach((player) => game.addPlayer(player))
 
         game.roll(4)
         game.wasCorrectlyAnswered()
         game.roll(2)
         game.makeThePlayerQuit()
 
-        assert.include(game.getPlayers(), players[0])
-        assert.notInclude(game.getPlayers(), players[1])
-        assert.include(game.getPlayers(), players[2])
+        assert.include(game.getPlayerPool().players, players[0])
+        assert.notInclude(game.getPlayerPool().players, players[1])
+        assert.include(game.getPlayerPool().players, players[2])
 
         // @ts-ignore
-        expect(consoleSpy.content).to.includes("Ed leaves the game"))
+        expect(consoleSpy.content).to.includes("Ed leaves the game")
     });
     
     it('player should leave prison', () => {

@@ -63,6 +63,10 @@ export class PlayerPool {
         return this.players[this.currentPlayer];
     }
 
+    removeCurrentPlayer() {
+        this.players.splice(this.currentPlayer, 1)
+    }
+
     isCurrentPlayerIsInPenaltyBox() {
         return this.inPenaltyBox[this.currentPlayer];
     }

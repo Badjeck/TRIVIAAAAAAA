@@ -6,9 +6,8 @@ import {PlayerPool} from "./playerPool";
 
 export class Game {
     private currentPlayer: number = 0;
-    private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
-    private playerPool: PlayerPool;
+    private readonly playerPool: PlayerPool;
     private console: IConsole;
 
     constructor(console : IConsole) {
@@ -112,7 +111,7 @@ export class Game {
       
           } else {
       
-            this.console.log("Answer was corrent!!!!");
+            this.console.log("Answer was correct!!!!");
             this.playerPool.addCoinToCurrentPlayerCurses()
 
             var winner = this.didPlayerWin();
@@ -130,12 +129,8 @@ export class Game {
     }
 
     public makeThePlayerQuit(): void {
-        this.console.log(`${this.players[this.currentPlayer]} leaves the game`)
-        this.players.splice(this.currentPlayer, 1)
-    }
-
-    public getPlayers(): Array<string> {
-        return this.players;
+        this.console.log(`${this.playerPool.getCurrentPlayer()} leaves the game`)
+        this.playerPool.removeCurrentPlayer()
     }
     
     public getInPenaltyBox(): boolean[]
@@ -146,5 +141,9 @@ export class Game {
     public getIsGettingOutOfPenaltyBox(): boolean
     {
         return this.playerPool.isGettingOutOfPenaltyBox
+    }
+
+    public getPlayerPool() : PlayerPool {
+        return this.playerPool
     }
 }
