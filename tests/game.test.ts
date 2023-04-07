@@ -3,6 +3,7 @@ import {describe, it} from 'mocha';
 import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
+import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
 
 describe('The test environment', () => {
     it('should pass', () => {

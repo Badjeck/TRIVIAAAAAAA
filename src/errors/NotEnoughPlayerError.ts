@@ -1,4 +1,4 @@
 export class NotEnoughPlayerError extends Error {
     message: string;
-    name: string;
+    name: string = "NotEnoughPlayerError";
 }
