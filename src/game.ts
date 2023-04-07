@@ -16,8 +16,7 @@ export class Game {
     private console: IConsole;
 
     constructor(console : IConsole) {
-
-        this.questions = new Questions(50);
+        this.questions = new Questions(50, console);
         this.console = console;
     }
 
@@ -155,5 +154,14 @@ export class Game {
             throw new NotEnoughPlayerError();
         } else if(this.howManyPlayers() > 6)
             throw new TooManyPlayerError();
+    }
+
+    public makeThePlayerQuit(): void {
+        this.console.log(`${this.players[this.currentPlayer]} leaves the game`)
+        this.players.splice(this.currentPlayer, 1)
+    }
+
+    public getPlayers(): Array<string> {
+        return this.players;
     }
 }
