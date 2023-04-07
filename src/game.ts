@@ -1,11 +1,12 @@
 import {IConsole} from "./Utils/IConsole";
-import {PlayerPool} from "./playerPool";
 import {Questions} from "./questions";
 import {NotEnoughPlayerError} from "./errors/NotEnoughPlayerError";
 import {TooManyPlayerError} from "./errors/TooManyPlayerError";
+import {PlayerPool} from "./playerPool";
 
 export class Game {
-
+    private currentPlayer: number = 0;
+    private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
     private playerPool: PlayerPool;
     private console: IConsole;
@@ -27,8 +28,10 @@ export class Game {
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
           if (roll % 2 != 0) {
-              this.playerPool.isGettingOutOfPenaltyBox = true;
-    
+            this.playerPool.isGettingOutOfPenaltyBox = true;
+            this.playerPool.inPenaltyBox[this.currentPlayer] = false
+
+
             this.console.log(this.playerPool.getCurrentPlayer() + " is getting out of the penalty box");
             this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
             if (this.playerPool.getCurrentPlayerPlaces() > 11) {
@@ -124,5 +127,15 @@ export class Game {
             throw new NotEnoughPlayerError();
         } else if(this.playerPool.howManyPlayers() > 6)
             throw new TooManyPlayerError();
+    }
+
+    public getInPenaltyBox(): boolean[]
+    {
+        return this.playerPool.inPenaltyBox
+    }
+
+    public getIsGettingOutOfPenaltyBox(): boolean
+    {
+        return this.playerPool.isGettingOutOfPenaltyBox
     }
 }
