@@ -51,8 +51,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console, true);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -64,8 +64,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -134,5 +134,49 @@ describe('The test environment', () => {
         expect(game.getIsGettingOutOfPenaltyBox()).to.equals(true)
         expect(game.getInPenaltyBox()[0]).to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
+    });
+
+    it('game should run until player reach gold required to win', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, false, 8);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        let notAWinner;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                notAWinner = game.wasCorrectlyAnswered();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (notAWinner);
+
+        expect(consoleSpy.content.toString()).to.include("8 Gold Coins");
+        expect(consoleSpy.content.toString()).to.not.include("9 Gold Coins");
+    });
+
+    it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, false,2);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        let notAWinner;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                notAWinner = game.wasCorrectlyAnswered();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (notAWinner);
+
+        expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
+        expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
     });
 });
