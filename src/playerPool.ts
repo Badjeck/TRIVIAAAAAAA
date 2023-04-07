@@ -7,7 +7,7 @@ export class PlayerPool {
     private _purses: Array<number> = [];
     private _inPenaltyBox: Array<boolean> = [];
     private _extraGold: Array<number> = [];
-    private _currentPlayerIndex: number = 0;
+    private _currentPlayer: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
     private console;
 
@@ -33,11 +33,11 @@ export class PlayerPool {
     }
 
     get currentPlayerIndex(): number {
-        return this._currentPlayerIndex;
+        return this._currentPlayer;
     }
 
     set currentPlayerIndex(value: number) {
-        this._currentPlayerIndex = value;
+        this._currentPlayer = value;
     }
 
     get isGettingOutOfPenaltyBox(): boolean {
@@ -65,8 +65,8 @@ export class PlayerPool {
         return true;
     }
 
-    public getCurrentPlayer() {
-        return this.players[this.currentPlayerIndex];
+    getCurrentPlayerName() {
+        return this.players[this._currentPlayer];
     }
 
     public removeCurrentPlayer() {
@@ -101,21 +101,21 @@ export class PlayerPool {
 
     public getCurrentPlayerExtraGold(): number
     {
-        return this._extraGold[this._currentPlayerIndex]
+        return this._extraGold[this._currentPlayer]
     }
 
     public currentPlayerAnswerRight(isCorrect : boolean)
     {
         if(isCorrect){
             this.addCoinToCurrentPlayerPurses();
-            this._extraGold[this._currentPlayerIndex]++;
+            this._extraGold[this._currentPlayer]++;
         }
         else
-            this._extraGold[this._currentPlayerIndex] = 0;
+            this._extraGold[this._currentPlayer] = 0;
     }
 
     private addCoinToCurrentPlayerPurses() {
-        const player : string= this.getCurrentPlayer();
+        const player : string= this.getCurrentPlayerName();
         const extraGold = this.getCurrentPlayerExtraGold()
         const coinsGains = 1 + extraGold;
         this.purses[this.currentPlayerIndex] += coinsGains;
