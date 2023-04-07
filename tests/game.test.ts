@@ -57,7 +57,8 @@ describe('The test environment', () => {
         game.roll(3);
         game.wasCorrectlyAnswered();
 
-        expect(console.content).to.include('Techno');
+        expect(console.content).to.includes('Techno');
+        expect(console.content).not.to.includes('Rock');
     })
 
     it("should ask rock questions if techno questions are not enabled", () => {
@@ -70,7 +71,8 @@ describe('The test environment', () => {
         game.roll(3);
         game.wasCorrectlyAnswered();
 
-        expect(console.content).to.include('Rock');
+        expect(console.content).to.includes('Rock');
+        expect(console.content).not.to.includes('Techno');
     })
 
     it('first player should leave a game', () => {
