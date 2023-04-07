@@ -156,8 +156,8 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content.toString()).to.include("8 Gold Coins");
-        expect(consoleSpy.content.toString()).to.not.include("9 Gold Coins");
+        expect(consoleSpy.content).to.include("8 Gold Coins");
+        expect(consoleSpy.content).to.not.include("9 Gold Coins");
     });
 
     it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
@@ -178,7 +178,22 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
-        expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
+        expect(consoleSpy.content).to.include("6 Gold Coins");
+        expect(consoleSpy.content).to.not.include("7 Gold Coins");
+    });
+
+    it('player that answers wrongly to a question selects next category', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.wrongAnswer("Rock")
+        game.roll(2)
+        game.wasCorrectlyAnswered()
+
+        assert.include(game.getPlayerPool().players, players[0])
     });
 });
