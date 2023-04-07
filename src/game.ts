@@ -16,7 +16,7 @@ export class Game {
         this.questions = new Questions(50, console);
         this.playerPool = new PlayerPool();
         this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
-        this.setGoldRequiredToWin(goldRequiredToWin);
+        this.setGoldRequiredToWin(goldRequiredToWin)
     }
 
     public addPlayer(name: string): boolean {

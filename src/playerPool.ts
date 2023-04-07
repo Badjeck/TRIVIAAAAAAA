@@ -1,3 +1,5 @@
+import {IConsole} from "./Utils/IConsole";
+
 export class PlayerPool {
 
     private _players: Array<string> = [];
@@ -6,8 +8,10 @@ export class PlayerPool {
     private _inPenaltyBox: Array<boolean> = [];
     private _currentPlayer: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
+    private console;
 
-    constructor() {
+    constructor(console: IConsole) {
+        this.console = console;
     }
 
 
@@ -48,13 +52,13 @@ export class PlayerPool {
     }
 
     public addPlayer(name: string): boolean {
-        this.players.push(name);
         this.places[this.howManyPlayers()] = 0;
         this.purses[this.howManyPlayers()] = 0;
+        this.players.push(name);
         this.inPenaltyBox[this.howManyPlayers()] = false;
 
-        console.log(name + " was added");
-        console.log("They are player number " + this.players.length);
+        this.console.log(name + " was added");
+        this.console.log("They are player number " + this.players.length);
 
         return true;
     }
@@ -95,7 +99,7 @@ export class PlayerPool {
 
     addCoinToCurrentPlayerCurses() {
         this.purses[this.currentPlayer] += 1;
-        console.log(this.getCurrentPlayer() + " now has " +
+        this.console.log(this.getCurrentPlayer() + " now has " +
             this.purses[this.currentPlayer] + " Gold Coins.");
     }
 }
