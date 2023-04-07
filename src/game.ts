@@ -3,7 +3,7 @@ import {IConsole} from "./Utils/IConsole";
 export class Game {
 
     private players: Array<string> = [];
-    private places: Array<number> = [];
+    private playersLocation: Array<number> = [];
     private playersPurse: Array<number> = [];
     private isPlayerInPenaltyBox: Array<boolean> = [];
     private currentPlayerIndex: number = 0;
@@ -34,7 +34,7 @@ export class Game {
 
     public add(player: string): boolean {
         this.players.push(player);
-        this.places[this.howManyPlayers()] = 0;
+        this.playersLocation[this.howManyPlayers()] = 0;
         this.playersPurse[this.howManyPlayers()] = 0;
         this.isPlayerInPenaltyBox[this.howManyPlayers()] = false;
 
@@ -57,12 +57,12 @@ export class Game {
             this.isGettingOutOfPenaltyBox = true;
     
             console.log(this.players[this.currentPlayerIndex] + " is getting out of the penalty box");
-            this.places[this.currentPlayerIndex] = this.places[this.currentPlayerIndex] + roll;
-            if (this.places[this.currentPlayerIndex] > 11) {
-              this.places[this.currentPlayerIndex] = this.places[this.currentPlayerIndex] - 12;
+            this.playersLocation[this.currentPlayerIndex] = this.playersLocation[this.currentPlayerIndex] + roll;
+            if (this.playersLocation[this.currentPlayerIndex] > 11) {
+              this.playersLocation[this.currentPlayerIndex] = this.playersLocation[this.currentPlayerIndex] - 12;
             }
     
-            console.log(this.players[this.currentPlayerIndex] + "'s new location is " + this.places[this.currentPlayerIndex]);
+            console.log(this.players[this.currentPlayerIndex] + "'s new location is " + this.playersLocation[this.currentPlayerIndex]);
             console.log("The category is " + this.currentCategory());
             this.askQuestion();
           } else {
@@ -71,12 +71,12 @@ export class Game {
           }
         } else {
 
-            this.places[this.currentPlayerIndex] += roll;
-          if (this.places[this.currentPlayerIndex] > 11) {
-            this.places[this.currentPlayerIndex] = this.places[this.currentPlayerIndex] - 12;
+            this.playersLocation[this.currentPlayerIndex] += roll;
+          if (this.playersLocation[this.currentPlayerIndex] > 11) {
+            this.playersLocation[this.currentPlayerIndex] = this.playersLocation[this.currentPlayerIndex] - 12;
           }
     
-          console.log(this.players[this.currentPlayerIndex] + "'s new location is " + this.places[this.currentPlayerIndex]);
+          console.log(this.players[this.currentPlayerIndex] + "'s new location is " + this.playersLocation[this.currentPlayerIndex]);
           console.log("The category is " + this.currentCategory());
           this.askQuestion();
         }
@@ -94,23 +94,23 @@ export class Game {
     }
 
     private currentCategory(): string {
-        if (this.places[this.currentPlayerIndex] == 0)
+        if (this.playersLocation[this.currentPlayerIndex] == 0)
             return 'Pop';
-        if (this.places[this.currentPlayerIndex] == 4)
+        if (this.playersLocation[this.currentPlayerIndex] == 4)
             return 'Pop';
-        if (this.places[this.currentPlayerIndex] == 8)
+        if (this.playersLocation[this.currentPlayerIndex] == 8)
             return 'Pop';
-        if (this.places[this.currentPlayerIndex] == 1)
+        if (this.playersLocation[this.currentPlayerIndex] == 1)
             return 'Science';
-        if (this.places[this.currentPlayerIndex] == 5)
+        if (this.playersLocation[this.currentPlayerIndex] == 5)
             return 'Science';
-        if (this.places[this.currentPlayerIndex] == 9)
+        if (this.playersLocation[this.currentPlayerIndex] == 9)
             return 'Science';
-        if (this.places[this.currentPlayerIndex] == 2)
+        if (this.playersLocation[this.currentPlayerIndex] == 2)
             return 'Sports';
-        if (this.places[this.currentPlayerIndex] == 6)
+        if (this.playersLocation[this.currentPlayerIndex] == 6)
             return 'Sports';
-        if (this.places[this.currentPlayerIndex] == 10)
+        if (this.playersLocation[this.currentPlayerIndex] == 10)
             return 'Sports';
         return 'Rock';
     }
