@@ -83,6 +83,6 @@ describe('The test environment', () => {
         assert.include(game.getPlayers(), players[2])
 
         // @ts-ignore
-        assert.isTrue(consoleSpy.content.includes("Ed leaves the game"))
+        expect(consoleSpy.content).to.includes("Ed leaves the game"))
     });
 });
