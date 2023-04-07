@@ -72,7 +72,7 @@ describe('The test environment', () => {
 
         expect(console.content).to.include('Rock');
     })
-    
+
     it('first player should leave a game', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
@@ -111,7 +111,7 @@ describe('The test environment', () => {
         // @ts-ignore
         expect(consoleSpy.content).to.includes("Ed leaves the game")
     });
-    
+
     it('player should leave prison', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
