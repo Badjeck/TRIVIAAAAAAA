@@ -10,7 +10,6 @@ export class Game {
     private readonly playerPool: PlayerPool;
     private console: IConsole;
     private goldRequiredToWin: number = 6;
-
     constructor(console : IConsole, isTechnoEnabled = false) {
         this.console = console;
         this.playerPool = new PlayerPool(console);
