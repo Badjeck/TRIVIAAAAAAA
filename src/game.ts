@@ -1,4 +1,5 @@
 import {IConsole} from "./Utils/IConsole";
+import {Questions} from "./questions";
 import {NotEnoughPlayerError} from "./errors/NotEnoughPlayerError";
 import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 
@@ -10,28 +11,14 @@ export class Game {
     private inPenaltyBox: Array<boolean> = [];
     private currentPlayer: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
-
-    private popQuestions: Array<string> = [];
-    private scienceQuestions: Array<string> = [];
-    private sportsQuestions: Array<string> = [];
-    private rockQuestions: Array<string> = [];
+    private questions: Questions;
 
     private console: IConsole;
 
     constructor(console : IConsole) {
 
+        this.questions = new Questions(50);
         this.console = console;
-
-        for (let i = 0; i < 50; i++) {
-            this.popQuestions.push("Pop Question " + i);
-            this.scienceQuestions.push("Science Question " + i);
-            this.sportsQuestions.push("Sports Question " + i);
-            this.rockQuestions.push(this.createRockQuestion(i));
-          }
-    }
-
-    private createRockQuestion(index: number): string {
-        return "Rock Question " + index;
     }
 
     public add(name: string): boolean {
@@ -67,7 +54,8 @@ export class Game {
     
             this.console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
             this.console.log("The category is " + this.currentCategory());
-            this.askQuestion();
+            this.questions.askQuestion(this.currentCategory());
+
           } else {
             this.console.log(this.players[this.currentPlayer] + " is not getting out of the penalty box");
             this.isGettingOutOfPenaltyBox = false;
@@ -81,19 +69,8 @@ export class Game {
     
           this.console.log(this.players[this.currentPlayer] + "'s new location is " + this.places[this.currentPlayer]);
           this.console.log("The category is " + this.currentCategory());
-          this.askQuestion();
+          this.questions.askQuestion(this.currentCategory());
         }
-    }
-
-    private askQuestion(): void {
-        if (this.currentCategory() == 'Pop')
-            this.console.log(this.popQuestions.shift());
-        if (this.currentCategory() == 'Science')
-            this.console.log(this.scienceQuestions.shift());
-        if (this.currentCategory() == 'Sports')
-            this.console.log(this.sportsQuestions.shift());
-        if (this.currentCategory() == 'Rock')
-            this.console.log(this.rockQuestions.shift());
     }
 
     private currentCategory(): string {
