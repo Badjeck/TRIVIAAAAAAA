@@ -106,17 +106,60 @@ describe('The test environment', () => {
     });
 
 
-    it("should not use joker if player has no joker", () => {
+
+    it('should a player use a joker card', function () {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
 
-        game.addPlayer('Pet')
-        game.addPlayer('Ed')
+        players.forEach((player) => game.addPlayer(player))
 
-        game.roll(3);
-        game.useJoker();
+        game.roll(4)
+        game.useJoker()
 
-        expect(consoleSpy.content).not.to.include("has used their Joker");
+        expect(consoleSpy.content).to.contain('Pet use a Joker')
+        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
+    });
+
+    it('2 different players should be able to use a joker card', function () {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.useJoker()
+
+        expect(consoleSpy.content).to.contain('Pet use a Joker')
+
+        game.roll(4)
+        game.useJoker()
+
+        expect(consoleSpy.content).to.contain('Ed use a Joker')
+    });
+
+    it('should a player not use a joker card twice per games', function () {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.useJoker()
+
+        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
+
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+
+        game.roll(4)
+        game.useJoker()
+
+        expect(consoleSpy.content).to.contain("Can't use a Joker twice")
     });
 
     it("should ask techno questions if techno questions are enabled", () => {
