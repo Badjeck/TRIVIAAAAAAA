@@ -3,8 +3,7 @@ import {ConsoleSpy} from "./Utils/ConsoleSpy";
 
 export class GameRunner {
     public static main(): void {
-        const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(console);
         game.add("Chet");
         game.add("Pat");
         game.add("Sue");
