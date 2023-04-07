@@ -142,6 +142,15 @@ export class Game {
         this.questions.replay();
         this.playerPool.replay();
     }
+    
+    public useJoker(): void {
+        if (this.usedJoker[this.currentPlayer]) {
+            this.console.log(this.players[this.currentPlayer] + " has already used their Joker this game.");
+        } else {
+            this.usedJoker[this.currentPlayer] = true;
+            this.console.log(this.players[this.currentPlayer] + " has used their Joker.");
+        }
+    }
 
     public makeThePlayerQuit(): void {
         this.console.log(`${this.playerPool.getCurrentPlayerName()} leaves the game`)

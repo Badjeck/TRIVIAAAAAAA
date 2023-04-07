@@ -11,6 +11,7 @@ export class GameRunner {
         do {
 
             game.roll(Math.floor(Math.random() * 6) + 1);
+            game.useJoker();
 
             if (Math.floor(Math.random() * 10) == 7) {
             notAWinner = game.wrongAnswer();
