@@ -4,6 +4,7 @@ export class Questions {
     private _scienceQuestions: Array<string> = [];
     private _sportsQuestions: Array<string> = [];
     private _rockQuestions: Array<string> = [];
+    private _technoQuestions: Array<string> = [];
 
     constructor(nbQuestions:number) {
         for (let i = 0; i < nbQuestions; i++) {
@@ -11,6 +12,7 @@ export class Questions {
             this.addScienceQuestion(i);
             this.addSportsQuestion(i);
             this.addRockQuestion(i);
+            this.addTechnoQuestion(i);
         }
     }
 
@@ -46,6 +48,14 @@ export class Questions {
         return this._rockQuestions.shift()
     }
 
+    public addTechnoQuestion(index: number){
+        this._technoQuestions.push("Techno Question " + index)
+    }
+
+    public shiftTechnoQuestion() {
+        return this._technoQuestions.shift();
+    }
+
     public askQuestion(category: String): void {
         if (category == 'Pop')
             console.log(this.shiftPopQuestion());
@@ -55,5 +65,7 @@ export class Questions {
             console.log(this.shiftSportsQuestion());
         if (category == 'Rock')
             console.log(this.shiftRockQuestion());
+        if (category == 'Techno')
+            console.log(this.shiftTechnoQuestion());
     }
 }

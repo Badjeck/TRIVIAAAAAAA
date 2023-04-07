@@ -46,4 +46,32 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).to.throw(Error)
     })
+
+    it("should ask techno questions if techno questions are enabled", () => {
+        const console = new ConsoleSpy();
+        const game = new Game(console);
+
+        game.add('Pet')
+        game.add('Ed')
+
+        game.enableTechnoQuestions();
+
+        game.roll(3);
+        game.wasCorrectlyAnswered();
+
+        expect(console.content).to.include('Techno');
+    })
+
+    it("should ask rock questions if techno questions are not enabled", () => {
+        const console = new ConsoleSpy();
+        const game = new Game(console);
+
+        game.add('Pet')
+        game.add('Ed')
+
+        game.roll(3);
+        game.wasCorrectlyAnswered();
+
+        expect(console.content).to.include('Rock');
+    })
 });

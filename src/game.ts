@@ -12,6 +12,7 @@ export class Game {
     private currentPlayer: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
+    private isTechnoQuestionsEnabled: boolean = false;
 
     private console: IConsole;
 
@@ -92,6 +93,8 @@ export class Game {
             return 'Sports';
         if (this.places[this.currentPlayer] == 10)
             return 'Sports';
+        if (this.isTechnoQuestionsEnabled)
+            return 'Techno';
         return 'Rock';
     }
 
@@ -156,4 +159,9 @@ export class Game {
         } else if(this.howManyPlayers() > 6)
             throw new TooManyPlayerError();
     }
+
+    public enableTechnoQuestions(): void {
+        this.isTechnoQuestionsEnabled = true;
+    }
+
 }
