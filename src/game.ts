@@ -1,4 +1,6 @@
 import {IConsole} from "./Utils/IConsole";
+import {NotEnoughPlayerError} from "./errors/NotEnoughPlayerError";
+import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 
 export class Game {
 
@@ -49,9 +51,10 @@ export class Game {
     }
 
     public roll(roll: number) {
+        this.checkGameHadGoodPlayersNumber();
         console.log(this.players[this.currentPlayer] + " is the current player");
         console.log("They have rolled a " + roll);
-    
+
         if (this.inPenaltyBox[this.currentPlayer]) {
           if (roll % 2 != 0) {
             this.isGettingOutOfPenaltyBox = true;
@@ -170,4 +173,10 @@ export class Game {
           }
     }
 
+    private checkGameHadGoodPlayersNumber() {
+        if (this.howManyPlayers() < 2) {
+            throw new NotEnoughPlayerError();
+        } else if(this.howManyPlayers() > 6)
+            throw new TooManyPlayerError();
+    }
 }
