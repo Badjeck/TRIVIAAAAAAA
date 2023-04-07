@@ -1,5 +1,7 @@
+import {IConsole} from "./Utils/IConsole";
 
 export class Questions {
+    private console: IConsole;
     private _popQuestions: Array<string> = [];
     private _scienceQuestions: Array<string> = [];
     private _sportsQuestions: Array<string> = [];
@@ -7,7 +9,7 @@ export class Questions {
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
 
-    constructor(nbQuestions:number) {
+    constructor(nbQuestions:number, console : IConsole) {
         for (let i = 0; i < nbQuestions; i++) {
             this.addPopQuestion(i)
             this.addScienceQuestion(i);
@@ -17,6 +19,8 @@ export class Questions {
             else
                 this.addRockQuestion(i);
         }
+
+        this.console = console;
     }
 
     public addPopQuestion(index: number) {
@@ -69,11 +73,11 @@ export class Questions {
 
     public askQuestion(category: String): void {
         if (category == 'Pop')
-            console.log(this.shiftPopQuestion());
+            this.console.log(this.shiftPopQuestion());
         if (category == 'Science')
-            console.log(this.shiftScienceQuestion());
+            this.console.log(this.shiftScienceQuestion());
         if (category == 'Sports')
-            console.log(this.shiftSportsQuestion());
+            this.console.log(this.shiftSportsQuestion());
         if (category == 'Rock')
             console.log(this.shiftRockQuestion());
         if (category == 'Techno')

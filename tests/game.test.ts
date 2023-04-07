@@ -1,4 +1,4 @@
-import {expect} from 'chai';
+import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
 import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
@@ -20,11 +20,11 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).to.throw(Error)
 
-        game.add('Pet')
+        game.addPlayer('Pet')
 
         expect(() => game.roll(5)).to.throw(Error)
 
-        game.add('Ed')
+        game.addPlayer('Ed')
 
         expect(() => game.roll(5)).not.to.throw(Error)
     })
@@ -34,15 +34,15 @@ describe('The test environment', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
 
-        game.add('Pet')
-        game.add('Ed')
-        game.add('Chat')
-        game.add('Dog')
-        game.add('Horse')
-        game.add('Monkey')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+        game.addPlayer('Chat')
+        game.addPlayer('Dog')
+        game.addPlayer('Horse')
+        game.addPlayer('Monkey')
         expect(() => game.roll(5)).not.to.throw(Error)
 
-        game.add('Luffy')
+        game.addPlayer('Luffy')
 
         expect(() => game.roll(5)).to.throw(Error)
     })
@@ -72,4 +72,67 @@ describe('The test environment', () => {
 
         expect(console.content).to.include('Rock');
     })
+    
+    it('first player should leave a game', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+
+        game.makeThePlayerQuit()
+
+        assert.notInclude(game.getPlayerPool().players, players[0])
+        assert.include(game.getPlayerPool().players, players[1])
+        assert.include(game.getPlayerPool().players, players[2])
+
+        // @ts-ignore
+        expect(consoleSpy.content).to.includes("Pet leaves the game")
+    });
+
+    it('second player should leave a game', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+        game.roll(2)
+        game.makeThePlayerQuit()
+
+        assert.include(game.getPlayerPool().players, players[0])
+        assert.notInclude(game.getPlayerPool().players, players[1])
+        assert.include(game.getPlayerPool().players, players[2])
+
+        // @ts-ignore
+        expect(consoleSpy.content).to.includes("Ed leaves the game")
+    });
+    
+    it('player should leave prison', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.wrongAnswer()
+
+        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(false)
+        expect(game.getInPenaltyBox()[0]).to.equals(true)
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
+        expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
+
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+        game.roll(5)
+
+        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(true)
+        expect(game.getInPenaltyBox()[0]).to.equals(false)
+        expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
+    });
 });
