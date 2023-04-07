@@ -66,9 +66,16 @@ export class Game {
             }
 
             this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory);
+            this.console.log("The category is " + this.currentCategory());
 
-            this.questions.askQuestion(this.currentCategory);
+            if (!this.usedJoker[this.currentPlayer]) {
+                const answer = Math.random() < 0.5 ? 'J' : 'A';
+                if (answer === 'J') {
+                    this.usedJoker[this.currentPlayer] = true;
+                    this.console.log(this.playerPool.getCurrentPlayerName() + " has used their Joker!");
+                    return;
+                }
+            }
         }
     }
 
@@ -145,10 +152,10 @@ export class Game {
     
     public useJoker(): void {
         if (this.usedJoker[this.currentPlayer]) {
-            this.console.log(this.players[this.currentPlayer] + " has already used their Joker this game.");
+            this.console.log(this.playerPool.getCurrentPlayerName() + " has already used their Joker this game.");
         } else {
             this.usedJoker[this.currentPlayer] = true;
-            this.console.log(this.players[this.currentPlayer] + " has used their Joker.");
+            this.console.log(this.playerPool.getCurrentPlayerName() + " has used their Joker.");
         }
     }
 

@@ -48,7 +48,7 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).not.to.throw(Error)
 
-        game.addPlayer('Luffy')
+        game.addPlayer('Luffy<3')
 
         expect(() => game.roll(5)).to.throw(Error)
     });
