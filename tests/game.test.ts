@@ -135,4 +135,50 @@ describe('The test environment', () => {
         expect(game.getInPenaltyBox()[0]).to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
     });
+
+    it('game should run until player reach gold required to win', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.setGoldRequiredToWin(8)
+
+        let notAWinner;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                notAWinner = game.wasCorrectlyAnswered();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (notAWinner);
+
+        expect(consoleSpy.content.toString()).to.include("8 Gold Coins");
+        expect(consoleSpy.content.toString()).to.not.include("9 Gold Coins");
+    });
+
+    it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.setGoldRequiredToWin(2)
+
+        let notAWinner;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                notAWinner = game.wasCorrectlyAnswered();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (notAWinner);
+
+        expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
+        expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
+    });
 });

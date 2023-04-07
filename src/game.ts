@@ -9,12 +9,15 @@ export class Game {
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
-  
+    private goldRequiredToWin: number = 6;
+
     constructor(console : IConsole, isTechnoEnabled = false) {
-        this.questions = new Questions(50);
         this.console = console;
-        this.playerPool = new PlayerPool();
+        this.playerPool = new PlayerPool(console);
         this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
+        this.questions = new Questions(50, console);
+        this.playerPool = new PlayerPool(console);
+    }
 
     public addPlayer(name: string): boolean {
         return this.playerPool.addPlayer(name)
@@ -82,7 +85,7 @@ export class Game {
     }
 
     private didPlayerWin(): boolean {
-        return !(this.playerPool.getCurrentPlayerPurses() == 6)
+        return !(this.playerPool.getCurrentPlayerPurses() == this.goldRequiredToWin)
     }
 
     public wrongAnswer(): boolean {
@@ -147,5 +150,11 @@ export class Game {
 
     public getPlayerPool() : PlayerPool {
         return this.playerPool
+    }
+
+    public setGoldRequiredToWin(gold) {
+        if(gold >= 6) {
+            this.goldRequiredToWin = gold;
+        }
     }
 }
