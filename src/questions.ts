@@ -9,8 +9,8 @@ export class Questions {
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
 
-    constructor(nbQuestions:number, console : IConsole, enableTechnoQuestions = false) {
-        this._isTechnoQuestionsEnabled = enableTechnoQuestions;
+    constructor(nbQuestions:number, console : IConsole, isTechnoQuestions) {
+        this._isTechnoQuestionsEnabled = isTechnoQuestions;
 
         for (let i = 0; i < nbQuestions; i++) {
             this.addPopQuestion(i)
