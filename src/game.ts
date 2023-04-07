@@ -10,13 +10,13 @@ export class Game {
     private readonly playerPool: PlayerPool;
     private console: IConsole;
     private goldRequiredToWin: number;
-
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;
-        this.questions = new Questions(50, console);
-        this.playerPool = new PlayerPool();
+        this.playerPool = new PlayerPool(console);
         this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
-        this.setGoldRequiredToWin(goldRequiredToWin)
+        this.questions = new Questions(50, console);
+        this.playerPool = new PlayerPool(console);
+        this.setGoldRequiredToWin(goldRequiredToWin);
     }
 
     public addPlayer(name: string): boolean {
@@ -29,34 +29,34 @@ export class Game {
         this.console.log("They have rolled a " + roll);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
-            if (roll % 2 != 0) {
-                this.playerPool.isGettingOutOfPenaltyBox = true;
-                this.playerPool.inPenaltyBox[this.currentPlayer] = false
+          if (roll % 2 != 0) {
+            this.playerPool.isGettingOutOfPenaltyBox = true;
+            this.playerPool.inPenaltyBox[this.currentPlayer] = false
 
 
-                this.console.log(this.playerPool.getCurrentPlayer() + " is getting out of the penalty box");
-                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
-                if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-                    this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12) ;
-                }
-
-                this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-                this.console.log("The category is " + this.currentCategory());
-                this.questions.askQuestion(this.currentCategory());
-            } else {
-                this.console.log(this.playerPool.getCurrentPlayer() + " is not getting out of the penalty box");
-                this.playerPool.isGettingOutOfPenaltyBox = false;
-            }
-        } else {
-
-            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
+            this.console.log(this.playerPool.getCurrentPlayer() + " is getting out of the penalty box");
+            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
             if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
+              this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12) ;
             }
 
             this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
             this.console.log("The category is " + this.currentCategory());
             this.questions.askQuestion(this.currentCategory());
+          } else {
+            this.console.log(this.playerPool.getCurrentPlayer() + " is not getting out of the penalty box");
+            this.playerPool.isGettingOutOfPenaltyBox = false;
+          }
+        } else {
+
+          this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
+          if (this.playerPool.getCurrentPlayerPlaces() > 11) {
+            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
+          }
+    
+          this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
+          this.console.log("The category is " + this.currentCategory());
+          this.questions.askQuestion(this.currentCategory());
         }
     }
 
@@ -79,7 +79,7 @@ export class Game {
             return 'Sports';
         if (this.playerPool.getCurrentPlayerPlaces() == 10)
             return 'Sports';
-        if (this.questions.getIsTechnoQuestionsEnabled() == true)
+        if (this.questions.getIsTechnoQuestionsEnabled())
             return 'Techno';
         return 'Rock';
     }
@@ -92,7 +92,7 @@ export class Game {
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
-
+    
         this.playerPool.changeCurrentPlayer();
 
         return true;
@@ -101,21 +101,21 @@ export class Game {
     public wasCorrectlyAnswered(): boolean {
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
             if (this.playerPool.isGettingOutOfPenaltyBox) {
-                this.console.log('Answer was correct!!!!');
-                this.playerPool.addCoinToCurrentPlayerCurses();
+              this.console.log('Answer was correct!!!!');
+              this.playerPool.addCoinToCurrentPlayerCurses();
 
-                var winner = this.didPlayerWin();
-                this.playerPool.changeCurrentPlayer()
-
-                return winner;
+              var winner = this.didPlayerWin();
+              this.playerPool.changeCurrentPlayer()
+      
+              return winner;
             } else {
-                this.playerPool.changeCurrentPlayer()
-                return true;
+              this.playerPool.changeCurrentPlayer()
+              return true;
             }
-
-
-        } else {
-
+      
+      
+          } else {
+      
             this.console.log("Answer was correct!!!!");
             this.playerPool.addCoinToCurrentPlayerCurses()
 
@@ -123,7 +123,7 @@ export class Game {
             this.playerPool.changeCurrentPlayer()
 
             return winner;
-        }
+          }
     }
 
     private checkGameHadGoodPlayersNumber() {
@@ -137,7 +137,7 @@ export class Game {
         this.console.log(`${this.playerPool.getCurrentPlayer()} leaves the game`)
         this.playerPool.removeCurrentPlayer()
     }
-
+    
     public getInPenaltyBox(): boolean[]
     {
         return this.playerPool.inPenaltyBox
