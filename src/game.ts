@@ -6,14 +6,13 @@ import {PlayerPool} from "./playerPool";
 
 export class Game {
     private currentPlayer: number = 0;
-    private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
-    private playerPool: PlayerPool;
+    private readonly playerPool: PlayerPool;
     private console: IConsole;
 
     constructor(console : IConsole) {
         this.console = console;
-        this.questions = new Questions(50);
+        this.questions = new Questions(50, console);
         this.playerPool = new PlayerPool();
     }
 
@@ -112,7 +111,7 @@ export class Game {
       
           } else {
       
-            this.console.log("Answer was corrent!!!!");
+            this.console.log("Answer was correct!!!!");
             this.playerPool.addCoinToCurrentPlayerCurses()
 
             var winner = this.didPlayerWin();
@@ -129,6 +128,11 @@ export class Game {
             throw new TooManyPlayerError();
     }
 
+    public makeThePlayerQuit(): void {
+        this.console.log(`${this.playerPool.getCurrentPlayer()} leaves the game`)
+        this.playerPool.removeCurrentPlayer()
+    }
+    
     public getInPenaltyBox(): boolean[]
     {
         return this.playerPool.inPenaltyBox
@@ -137,5 +141,9 @@ export class Game {
     public getIsGettingOutOfPenaltyBox(): boolean
     {
         return this.playerPool.isGettingOutOfPenaltyBox
+    }
+
+    public getPlayerPool() : PlayerPool {
+        return this.playerPool
     }
 }
