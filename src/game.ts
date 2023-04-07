@@ -110,13 +110,11 @@ export class Game {
           } else {
       
             this.console.log("Answer was corrent!!!!");
-      
             this.playerPool.addCoinToCurrentPlayerCurses()
-      
+
             var winner = this.didPlayerWin();
-      
             this.playerPool.changeCurrentPlayer()
-      
+
             return winner;
           }
     }
