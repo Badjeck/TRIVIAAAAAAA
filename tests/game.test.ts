@@ -51,8 +51,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console, true);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -64,8 +64,8 @@ describe('The test environment', () => {
         const console = new ConsoleSpy();
         const game = new Game(console);
 
-        game.add('Pet')
-        game.add('Ed')
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -138,11 +138,10 @@ describe('The test environment', () => {
 
     it('game should run until player reach gold required to win', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, false, 8);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
-        game.setGoldRequiredToWin(8)
 
         let notAWinner;
         do {
@@ -161,11 +160,10 @@ describe('The test environment', () => {
 
     it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, false,2);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
-        game.setGoldRequiredToWin(2)
 
         let notAWinner;
         do {
