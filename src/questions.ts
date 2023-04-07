@@ -5,14 +5,17 @@ export class Questions {
     private _sportsQuestions: Array<string> = [];
     private _rockQuestions: Array<string> = [];
     private _technoQuestions: Array<string> = [];
+    private _isTechnoQuestionsEnabled: boolean = false;
 
     constructor(nbQuestions:number) {
         for (let i = 0; i < nbQuestions; i++) {
             this.addPopQuestion(i)
             this.addScienceQuestion(i);
             this.addSportsQuestion(i);
-            this.addRockQuestion(i);
-            this.addTechnoQuestion(i);
+            if (this._isTechnoQuestionsEnabled)
+                this.addTechnoQuestion(i);
+            else
+                this.addRockQuestion(i);
         }
     }
 
@@ -46,6 +49,14 @@ export class Questions {
 
     public shiftRockQuestion() {
         return this._rockQuestions.shift()
+    }
+
+    public getIsTechnoQuestionsEnabled(): boolean{
+        return this._isTechnoQuestionsEnabled;
+    }
+
+    public setIsTechnoQuestionsEnabled(value: boolean): void {
+        this._isTechnoQuestionsEnabled = value;
     }
 
     public addTechnoQuestion(index: number){

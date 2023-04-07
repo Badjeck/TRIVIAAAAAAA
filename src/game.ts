@@ -12,14 +12,12 @@ export class Game {
     private currentPlayer: number = 0;
     private isGettingOutOfPenaltyBox: boolean = false;
     private questions: Questions;
-    private isTechnoQuestionsEnabled: boolean = false;
-
     private console: IConsole;
 
-    constructor(console : IConsole) {
-
+    constructor(console : IConsole, isTechnoEnabled = false) {
         this.questions = new Questions(50);
         this.console = console;
+        this.questions.setIsTechnoQuestionsEnabled(isTechnoEnabled)
     }
 
     public add(name: string): boolean {
@@ -93,7 +91,7 @@ export class Game {
             return 'Sports';
         if (this.places[this.currentPlayer] == 10)
             return 'Sports';
-        if (this.isTechnoQuestionsEnabled)
+        if (this.questions.getIsTechnoQuestionsEnabled())
             return 'Techno';
         return 'Rock';
     }
@@ -159,9 +157,4 @@ export class Game {
         } else if(this.howManyPlayers() > 6)
             throw new TooManyPlayerError();
     }
-
-    public enableTechnoQuestions(): void {
-        this.isTechnoQuestionsEnabled = true;
-    }
-
 }

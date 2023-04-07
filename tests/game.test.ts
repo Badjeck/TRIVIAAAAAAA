@@ -49,12 +49,10 @@ describe('The test environment', () => {
 
     it("should ask techno questions if techno questions are enabled", () => {
         const console = new ConsoleSpy();
-        const game = new Game(console);
+        const game = new Game(console, true);
 
         game.add('Pet')
         game.add('Ed')
-
-        game.enableTechnoQuestions();
 
         game.roll(3);
         game.wasCorrectlyAnswered();
