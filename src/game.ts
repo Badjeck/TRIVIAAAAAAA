@@ -5,6 +5,9 @@ import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
 
 export class Game {
+    private currentPlayer: number = 0;
+    private usedJoker: Array<boolean> = [];
+
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
@@ -20,6 +23,7 @@ export class Game {
     }
 
     public addPlayer(name: string): boolean {
+        this.usedJoker[this.howManyPlayers()] = false;
         return this.playerPool.addPlayer(name)
     }
 
@@ -54,8 +58,18 @@ export class Game {
             }
 
             this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory);
-            this.questions.askQuestion(this.currentCategory);
+            this.console.log("The category is " + this.currentCategory());
+
+            if (!this.usedJoker[this.currentPlayer]) {
+                const answer = Math.random() < 0.5 ? 'J' : 'A';
+                if (answer === 'J') {
+                    this.usedJoker[this.currentPlayer] = true;
+                    this.console.log(this.players[this.currentPlayer] + " has used their Joker!");
+                    return;
+                }
+            }
+
+            this.questions.askQuestion(this.currentCategory());
         }
     }
 
@@ -128,6 +142,15 @@ export class Game {
             this.playerPool.changeCurrentPlayer()
 
             return winner;
+        }
+    }
+
+    public useJoker(): void {
+        if (this.usedJoker[this.currentPlayer]) {
+            this.console.log(this.players[this.currentPlayer] + " has already used their Joker this game.");
+        } else {
+            this.usedJoker[this.currentPlayer] = true;
+            this.console.log(this.players[this.currentPlayer] + " has used their Joker.");
         }
     }
 
