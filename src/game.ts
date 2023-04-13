@@ -153,10 +153,10 @@ export class Game {
     }
     
     public useJoker(): void {
-        if (this.usedJoker[this.playerPool.currentPlayer]) {
+        if (this.playerPool.usedJoker[this.playerPool.currentPlayer]) {
             this.console.log(this.playerPool.getCurrentPlayerName() + " already used a Joker.");
         } else {
-            this.usedJoker[this.playerPool.currentPlayer] = true;
+            this.playerPool.usedJoker[this.playerPool.currentPlayer] = true;
             this.console.log(this.playerPool.getCurrentPlayerName() + " used a Joker.");
             this.playerPool.changeCurrentPlayer();
         }
