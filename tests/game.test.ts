@@ -3,6 +3,7 @@ import {describe, it} from 'mocha';
 import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
+import matchAll = require("string.prototype.matchall");
 import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
 
 describe('The test environment', () => {
@@ -181,4 +182,45 @@ describe('The test environment', () => {
         expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
         expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
     });
+
+    it('question distribution should be proportional with category number of total question', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, true);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        //Pop, Science, Sports, Rock, Techno
+        let questionCategoryAnsweredPet: Array<number> = [0, 0, 0, 0]
+        let questionCategoryAnsweredEd: Array<number> = [0, 0, 0, 0]
+
+        const categoryPatterns = [
+            new RegExp("^The category is Pop\\nRock Question [0-9]+$"),
+            new RegExp("^The category is Science\\nRock Question [0-9]+$"),
+            new RegExp("^The category is Sports\\nRock Question [0-9]+$"),
+            new RegExp("^The category is Rock\\nRock Question [0-9]+$"),
+            new RegExp("^The category is Techno\\nTechno Question [0-9]+$"),
+        ];
+
+        const categoryIndices = [0, 1, 2, 3]
+
+        for (let i = 0; i < 100; i++) {
+            game.roll(3);
+            game.wasCorrectlyAnswered();
+        }
+
+        const matches = matchAll(consoleSpy.content, categoryPatterns);
+
+        for (const match of matches) {
+            const categoryIndex = categoryIndices[match.index - 1];
+            questionCategoryAnsweredPet[categoryIndex]++;
+            questionCategoryAnsweredEd[categoryIndex]++;
+        }
+
+        const allEqualPet = questionCategoryAnsweredPet.every((val, i, arr) => val === arr[0]);
+        const allEqualEd = questionCategoryAnsweredEd.every((val, i, arr) => val === arr[0]);
+
+        expect(allEqualPet).to.equals(true);
+        expect(allEqualEd).to.equals(true);
+    })
 });
