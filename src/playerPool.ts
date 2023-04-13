@@ -97,20 +97,6 @@ export class PlayerPool {
             this.currentPlayer = 0;
     }
 
-    nextPlayer() {
-        let cp = this.currentPlayer;
-        if (cp == this.players.length)
-            cp = 0;
-        return cp;
-    }
-
-    previousPlayer() {
-        let cp = this.currentPlayer;
-        if (cp == 0)
-            cp = this.players.length;
-        return cp;
-    }
-
     addCoinToCurrentPlayerCurses() {
         this.purses[this.currentPlayer] += 1;
         this.console.log(this.getCurrentPlayer() + " now has " +
