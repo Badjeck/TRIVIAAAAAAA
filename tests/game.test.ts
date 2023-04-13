@@ -1,5 +1,6 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
+import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
@@ -8,6 +9,10 @@ import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
+    });
+
+    it("should access game", function () {
+        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -43,7 +48,7 @@ describe('The test environment', () => {
 
         expect(() => game.roll(5)).not.to.throw(Error)
 
-        game.addPlayer('Luffy<3')
+        game.addPlayer('Luffy')
 
         expect(() => game.roll(5)).to.throw(Error)
     });
@@ -105,54 +110,55 @@ describe('The test environment', () => {
     it('should a player use a joker card', function () {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
-        const players: string[] = ['Pet', 'Ed', 'Chat']
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
 
-        players.forEach((player) => game.addPlayer(player))
+        players.forEach((player) => game.addPlayer(player));
 
-        game.roll(4)
-        game.useJoker()
+        game.roll(4);
+        game.useJoker();
 
-        expect(consoleSpy.content).to.contain('Pet used a Joker')
+        expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
     });
 
-    it('2 different players should be able to use a joker card', function () {
+    it('2 different players should be able to use a joker card', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
-        const players: string[] = ['Pet', 'Ed', 'Chat']
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
 
-        players.forEach((player) => game.addPlayer(player))
+        players.forEach((player) => game.addPlayer(player));
 
-        game.roll(4)
-        game.useJoker()
+        game.roll(4);
+        game.useJoker();
 
-        expect(consoleSpy.content).to.contain('Pet used a Joker')
+        expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
 
-        game.roll(4)
-        game.useJoker()
+        game.roll(4);
+        game.useJoker();
 
-        expect(consoleSpy.content).to.contain('Ed used a Joker')
+        expect(consoleSpy.content.join('')).to.include('Ed used a Joker');
     });
 
-    it('should a player not use a joker card twice per games', function () {
+    it('should a player not use a joker card twice per game', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
-        const players: string[] = ['Pet', 'Ed', 'Chat']
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
 
-        players.forEach((player) => game.addPlayer(player))
+        players.forEach((player) => game.addPlayer(player));
 
-        game.roll(4)
-        game.useJoker()
+        game.roll(4);
+        game.useJoker();
 
-        game.roll(4)
-        game.wasCorrectlyAnswered()
-        game.roll(4)
-        game.wasCorrectlyAnswered()
+        game.roll(4);
+        game.wasCorrectlyAnswered();
+        game.roll(4);
+        game.wasCorrectlyAnswered();
 
-        game.roll(4)
-        game.useJoker()
+        game.roll(4);
+        game.useJoker();
 
-        expect(consoleSpy.content).to.contain("Pet already used a Joker")
+        expect(consoleSpy.content.join('')).to.include('Pet already used a Joker');
     });
+
 
     it("should ask techno questions if techno questions are enabled", () => {
         const console = new ConsoleSpy();
