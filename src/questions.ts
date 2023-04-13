@@ -77,19 +77,19 @@ export class Questions {
         let questionToAsk: string = ''
 
         if (category == 'Pop') {
-            questionToAsk = this.shiftPopQuestion()
+            questionToAsk = this.shiftPopQuestion()!
             this._popQuestions.push(questionToAsk)
         } else if (category == 'Science') {
-            questionToAsk = this.shiftScienceQuestion()
+            questionToAsk = this.shiftScienceQuestion()!
             this._scienceQuestions.push(questionToAsk)
         } else if (category == 'Sports') {
-            questionToAsk = this.shiftSportsQuestion()
+            questionToAsk = this.shiftSportsQuestion()!
             this._sportsQuestions.push(questionToAsk)
         } else if (category == 'Rock') {
-            questionToAsk = this.shiftRockQuestion()
+            questionToAsk = this.shiftRockQuestion()!
             this._rockQuestions.push(questionToAsk)
         } else if (category == 'Techno') {
-            questionToAsk = this.shiftTechnoQuestion()
+            questionToAsk = this.shiftTechnoQuestion()!
             this._technoQuestions.push(questionToAsk)
         }
 

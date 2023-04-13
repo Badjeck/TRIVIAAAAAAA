@@ -1,6 +1,5 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
-import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
@@ -9,10 +8,6 @@ import {Questions} from "../src/questions";
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
-    });
-
-    it("should access game", function () {
-        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -193,4 +188,25 @@ describe('The test environment', () => {
         expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
         expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
     });
+
+    it('When a player answer correctly in a row, should gain more coins',()=>{
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(2);
+        game.wasCorrectlyAnswered();
+
+        game.roll(2);
+        game.wrongAnswer();
+
+        game.roll(2);
+        game.wasCorrectlyAnswered();
+
+        expect(consoleSpy.content).to.includes("Pet now has gain 1 Gold Coin(s) and now has 1 Gold Coin(s).");
+        expect(consoleSpy.content).to.includes("Pet now has gain 2 Gold Coin(s) with 1 bonus Gold Coin(s) with the win in a row, Pet now has 3 Gold Coin(s).");
+
+    })
 });

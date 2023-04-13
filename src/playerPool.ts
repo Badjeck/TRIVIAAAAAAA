@@ -6,7 +6,8 @@ export class PlayerPool {
     private _places: Array<number> = [];
     private _purses: Array<number> = [];
     private _inPenaltyBox: Array<boolean> = [];
-    private _currentPlayer: number = 0;
+    private _winsInARow: Array<number> = [];
+    private _currentPlayerIndex: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
     private console;
 
@@ -31,12 +32,12 @@ export class PlayerPool {
         return this._inPenaltyBox;
     }
 
-    get currentPlayer(): number {
-        return this._currentPlayer;
+    get currentPlayerIndex(): number {
+        return this._currentPlayerIndex;
     }
 
-    set currentPlayer(value: number) {
-        this._currentPlayer = value;
+    set currentPlayerIndex(value: number) {
+        this._currentPlayerIndex = value;
     }
 
     get isGettingOutOfPenaltyBox(): boolean {
@@ -54,6 +55,7 @@ export class PlayerPool {
     public addPlayer(name: string): boolean {
         this.places[this.howManyPlayers()] = 0;
         this.purses[this.howManyPlayers()] = 0;
+        this._winsInARow[this.howManyPlayers()] = 0;
         this.players.push(name);
         this.inPenaltyBox[this.howManyPlayers()] = false;
 
@@ -63,43 +65,66 @@ export class PlayerPool {
         return true;
     }
 
-    getCurrentPlayer() {
-        return this.players[this.currentPlayer];
+    public getCurrentPlayer() {
+        return this.players[this.currentPlayerIndex];
     }
 
-    removeCurrentPlayer() {
-        this.players.splice(this.currentPlayer, 1)
+    public removeCurrentPlayer() {
+        this.players.splice(this.currentPlayerIndex, 1)
     }
 
-    isCurrentPlayerIsInPenaltyBox() {
-        return this.inPenaltyBox[this.currentPlayer];
+    public isCurrentPlayerIsInPenaltyBox() {
+        return this.inPenaltyBox[this.currentPlayerIndex];
     }
 
-    getCurrentPlayerPlaces() {
-        return this.places[this.currentPlayer]
+    public getCurrentPlayerPlaces() {
+        return this.places[this.currentPlayerIndex]
     }
 
-    setCurrentPlayerPlaces(newPlace: number) {
-        this.places[this.currentPlayer] = newPlace;
+    public setCurrentPlayerPlaces(newPlace: number) {
+        this.places[this.currentPlayerIndex] = newPlace;
     }
 
-    getCurrentPlayerPurses() {
-        return this.purses[this.currentPlayer];
+    public getCurrentPlayerPurses() {
+        return this.purses[this.currentPlayerIndex];
     }
 
-    setCurrentPlayerInPenaltyBox(bool: boolean) {
-        this.inPenaltyBox[this.currentPlayer] = bool;
+    public setCurrentPlayerInPenaltyBox(bool: boolean) {
+        this.inPenaltyBox[this.currentPlayerIndex] = bool;
     }
 
-    changeCurrentPlayer() {
-        this.currentPlayer += 1;
-        if (this.currentPlayer == this.players.length)
-            this.currentPlayer = 0;
+    public changeCurrentPlayer() {
+        this.currentPlayerIndex += 1;
+        if (this.currentPlayerIndex == this.players.length)
+            this.currentPlayerIndex = 0;
     }
 
-    addCoinToCurrentPlayerCurses() {
-        this.purses[this.currentPlayer] += 1;
-        this.console.log(this.getCurrentPlayer() + " now has " +
-            this.purses[this.currentPlayer] + " Gold Coins.");
+    public getCurrentPlayerRightAwnserStrike(): number
+    {
+        return this._winsInARow[this._currentPlayerIndex]
+    }
+
+    public currentPlayerAwnserRight(isCorrect : boolean)
+    {
+        let currentPlayerWinInARow = this._winsInARow[this._currentPlayerIndex];
+        if(isCorrect){
+            this.addCoinToCurrentPlayerCurses();
+            this._winsInARow[this._currentPlayerIndex]++;
+        }
+        else
+            this._winsInARow[this._currentPlayerIndex] = 0;
+    }
+
+    private addCoinToCurrentPlayerCurses() {
+        const playerName = this.getCurrentPlayer();
+        const winInARow = this.getCurrentPlayerRightAwnserStrike()
+        const coinsGains = 1 + winInARow;
+        this.purses[this.currentPlayerIndex] += coinsGains;
+        const playerCurrentPurse = this.purses[this.currentPlayerIndex]; 
+        if(this.getCurrentPlayerRightAwnserStrike()>0)
+            this.console.log(`${playerName} now has gain ${coinsGains} Gold Coin(s) with ${winInARow} bonus Gold Coin(s) with the win in a row, ${playerName} now has ${playerCurrentPurse} Gold Coin(s).`)
+        else
+            this.console.log(`${playerName} now has gain ${coinsGains} Gold Coin(s) and now has ${playerCurrentPurse} Gold Coin(s).`)
+
     }
 }
