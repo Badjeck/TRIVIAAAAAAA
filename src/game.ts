@@ -5,7 +5,6 @@ import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
 
 export class Game {
-    private usedJoker: Array<boolean> = [];
 
     private questions: Questions;
     private readonly playerPool: PlayerPool;
@@ -22,7 +21,7 @@ export class Game {
     }
 
     public addPlayer(name: string): boolean {
-        this.usedJoker[this.playerPool.howManyPlayers()] = false;
+        this.playerPool.usedJoker[this.playerPool.howManyPlayers()] = false;
         return this.playerPool.addPlayer(name)
     }
 
@@ -136,10 +135,10 @@ export class Game {
     }
 
     public useJoker(): void {
-        if (this.usedJoker[this.playerPool.currentPlayer]) {
+        if (this.playerPool.usedJoker[this.playerPool.currentPlayer]) {
             this.console.log(this.playerPool.getCurrentPlayerName() + " already used a Joker.");
         } else {
-            this.usedJoker[this.playerPool.currentPlayer] = true;
+            this.playerPool.usedJoker[this.playerPool.currentPlayer] = true;
             this.console.log(this.playerPool.getCurrentPlayerName() + " used a Joker.");
             this.playerPool.changeCurrentPlayer();
         }

@@ -7,6 +7,7 @@ export class PlayerPool {
     private _purses: Array<number> = [];
     private _inPenaltyBox: Array<boolean> = [];
     private _extraGold: Array<number> = [];
+    private _usedJoker: Array<boolean> = [];
     private _currentPlayer: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
     private console;
@@ -14,7 +15,6 @@ export class PlayerPool {
     constructor(console: IConsole) {
         this.console = console;
     }
-
 
     get players(): Array<string> {
         return this._players;
@@ -32,7 +32,11 @@ export class PlayerPool {
         return this._inPenaltyBox;
     }
 
-    get currentPlayerIndex(): number {
+    get usedJoker(): Array<boolean> {
+        return this._usedJoker;
+    }
+
+    get currentPlayer(): number {
         return this._currentPlayer;
     }
 
