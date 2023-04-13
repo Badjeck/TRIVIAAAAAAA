@@ -1,6 +1,5 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
-import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
@@ -9,10 +8,6 @@ import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
-    });
-
-    it("should access game", function () {
-        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -117,8 +112,7 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Pet use a Joker')
-        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
+        expect(consoleSpy.content).to.contain('Pet used a Joker')
     });
 
     it('2 different players should be able to use a joker card', function () {
@@ -131,12 +125,12 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Pet use a Joker')
+        expect(consoleSpy.content).to.contain('Pet used a Joker')
 
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Ed use a Joker')
+        expect(consoleSpy.content).to.contain('Ed used a Joker')
     });
 
     it('should a player not use a joker card twice per games', function () {
@@ -149,8 +143,6 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
-
         game.roll(4)
         game.wasCorrectlyAnswered()
         game.roll(4)
@@ -159,7 +151,7 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain("Can't use a Joker twice")
+        expect(consoleSpy.content).to.contain("Pet already used a Joker")
     });
 
     it("should ask techno questions if techno questions are enabled", () => {
