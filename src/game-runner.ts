@@ -8,6 +8,7 @@ export class GameRunner {
         game.addPlayer("Sue");
 
         let notAWinner;
+        
         do {
 
             game.roll(Math.floor(Math.random() * 6) + 1);

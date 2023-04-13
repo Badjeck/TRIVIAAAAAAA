@@ -11,6 +11,7 @@ export class PlayerPool {
     private _numberOfTimeInPenaltyBox: Array<number> = [];
     private _currentPlayer: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
+
     private console;
 
     constructor(console: IConsole) {

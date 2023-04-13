@@ -1,6 +1,5 @@
-import { assert, expect } from "chai";
-import { Player } from "../src/Player/player"
-import { IConsole } from "../src/Utils/IConsole"
+import { expect } from "chai";
+import {describe, beforeEach, it} from 'mocha';
 import { PlayerPool } from "../src/playerPool"
 
 let playerPool: PlayerPool;
@@ -13,9 +12,22 @@ describe("playerPool Test", () => {
 
     describe("out Value Test", () => {
 
+        // describe("addPlaayer", () => {
+
+        //     it("is player is added", () => {
+        //         playerPool.addPlayer()
+        //     })
+        // })
+
         describe("count Player", () => {
 
+            it("player count 0", () => {
+                
+                expect(playerPool.howManyPlayers()).be.eq(0)
+            })
+
             it("player count 4", () => {
+
                 playerPool.addPlayer("Sam1");
                 playerPool.addPlayer("Sam2");
                 playerPool.addPlayer("Sam3");
@@ -23,6 +35,17 @@ describe("playerPool Test", () => {
 
                 expect(playerPool.howManyPlayers()).be.eq(4)
             })
+
+            it("player count max", () => {
+
+                for (let i = 1; i <= 9 ;i++) {
+                    playerPool.addPlayer("")
+                }
+
+                expect(playerPool.howManyPlayers()).be.eq(9)
+            })
         })
+
+
     })
 })
