@@ -151,7 +151,7 @@ export class Game {
         return this.playerPool.isGettingOutOfPenaltyBox
     }
 
-    public getPlayerPool() : PlayerPool {
+    public getPlayerPool(): PlayerPool {
         return this.playerPool
     }
 
@@ -187,7 +187,7 @@ export class Game {
     }
 
     private setGoldRequiredToWin(gold) {
-        if(gold >= 6) {
+        if (gold >= 6) {
             this.goldRequiredToWin = gold;
         } 
     }

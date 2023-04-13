@@ -3,11 +3,11 @@ import {IConsole} from "./Utils/IConsole";
 export class Questions {
 
     private console: IConsole;
-    private _popQuestions: Array<string> = [];
-    private _scienceQuestions: Array<string> = [];
-    private _sportsQuestions: Array<string> = [];
-    private _rockQuestions: Array<string> = [];
-    private _technoQuestions: Array<string> = [];
+    private _popQuestions: Array<String> = [];
+    private _scienceQuestions: Array<String> = [];
+    private _sportsQuestions: Array<String> = [];
+    private _rockQuestions: Array<String> = [];
+    private _technoQuestions: Array<String> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
     private _numberOfQuestion : number;
 
@@ -68,8 +68,8 @@ export class Questions {
         return this._technoQuestions.shift();
     }
 
-    public askQuestion(category: String): string {
-        let questionToAsk: string = ''
+    public askQuestion(category: String): String {
+        let questionToAsk: String = ''
 
         if (category == 'Pop') {
             questionToAsk = this.shiftPopQuestion()!
