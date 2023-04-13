@@ -5,7 +5,6 @@ import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
 
 export class Game {
-    private currentPlayer: number = 0;
     private usedJoker: Array<boolean> = [];
 
     private questions: Questions;
@@ -59,15 +58,6 @@ export class Game {
 
             this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
             this.console.log("The category is " + this.currentCategory());
-
-            if (!this.usedJoker[this.currentPlayer]) {
-                const answer = Math.random() < 0.5 ? 'J' : 'A';
-                if (answer === 'J') {
-                    this.usedJoker[this.currentPlayer] = true;
-                    this.console.log(this.playerPool.getCurrentPlayerName() + " has used their Joker!");
-                    return;
-                }
-            }
 
             this.questions.askQuestion(this.currentCategory());
         }
@@ -146,11 +136,12 @@ export class Game {
     }
 
     public useJoker(): void {
-        if (this.usedJoker[this.currentPlayer]) {
-            this.console.log(this.playerPool.getCurrentPlayerName() + " has already used their Joker this game.");
+        if (this.usedJoker[this.playerPool.currentPlayer]) {
+            this.console.log(this.playerPool.getCurrentPlayerName() + " already used a Joker.");
         } else {
-            this.usedJoker[this.currentPlayer] = true;
-            this.console.log(this.playerPool.getCurrentPlayerName() + " has used their Joker.");
+            this.usedJoker[this.playerPool.currentPlayer] = true;
+            this.console.log(this.playerPool.getCurrentPlayerName() + " used a Joker.");
+            this.playerPool.changeCurrentPlayer();
         }
     }
 

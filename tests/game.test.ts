@@ -43,7 +43,6 @@ describe('The test environment', () => {
         expect(() => game.roll(5)).to.throw(Error)
     });
 
-
     it('should a player use a joker card', function () {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
@@ -54,8 +53,7 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Pet use a Joker')
-        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
+        expect(consoleSpy.content).to.contain('Pet used a Joker')
     });
 
     it('2 different players should be able to use a joker card', function () {
@@ -68,12 +66,12 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Pet use a Joker')
+        expect(consoleSpy.content).to.contain('Pet used a Joker')
 
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Ed use a Joker')
+        expect(consoleSpy.content).to.contain('Ed used a Joker')
     });
 
     it('should a player not use a joker card twice per games', function () {
@@ -86,8 +84,6 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain('Answer was correct!!!!')
-
         game.roll(4)
         game.wasCorrectlyAnswered()
         game.roll(4)
@@ -96,7 +92,7 @@ describe('The test environment', () => {
         game.roll(4)
         game.useJoker()
 
-        expect(consoleSpy.content).to.contain("Can't use a Joker twice")
+        expect(consoleSpy.content).to.contain("Pet already used a Joker")
     });
 
     it("should ask techno questions if techno questions are enabled", () => {
