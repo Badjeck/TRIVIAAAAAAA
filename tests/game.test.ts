@@ -144,11 +144,9 @@ describe('The test environment', () => {
 
         const questions = new Questions(1, consoleSpy)
 
-        questions.askQuestion('Pop')
-        const firstQuestionAsked = consoleSpy.content[consoleSpy.content.length - 1]
+        const firstQuestionAsked = questions.askQuestion('Pop')
 
-        questions.askQuestion('Pop')
-        const secondQuestionAsked = consoleSpy.content[consoleSpy.content.length - 1]
+        const secondQuestionAsked = questions.askQuestion('Pop')
         expect(firstQuestionAsked).to.equals(secondQuestionAsked)
     });
 

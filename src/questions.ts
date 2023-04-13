@@ -73,7 +73,7 @@ export class Questions {
         return this._technoQuestions.shift();
     }
 
-    public askQuestion(category: String): void {
+    public askQuestion(category: String): string {
         let questionToAsk: string = ''
 
         if (category == 'Pop') {
@@ -94,5 +94,7 @@ export class Questions {
         }
 
         this.console.log(questionToAsk);
+
+        return questionToAsk
     }
 }
