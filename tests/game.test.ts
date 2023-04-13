@@ -191,8 +191,9 @@ describe('The test environment', () => {
 
         game.roll(4)
         game.wrongAnswer("Rock")
-        game.roll(2)
-        game.wasCorrectlyAnswered()
+        game.roll(0)
+
+        expect(game.getCurrentCategory()).to.equals("Rock")
 
         assert.include(game.getPlayerPool().players, players[0])
     });

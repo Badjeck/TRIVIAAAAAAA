@@ -9,12 +9,14 @@ export class Game {
     private readonly playerPool: PlayerPool;
     private console: IConsole;
     private goldRequiredToWin: number;
+    private currentCategory = "";
 
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;
         this.questions = new Questions(50, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
+        this.currentCategory = this.newCurrentCategory()
     }
 
     public addPlayer(name: string): boolean {
@@ -38,8 +40,8 @@ export class Game {
                 }
 
                 this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-                this.console.log("The category is " + this.currentCategory());
-                this.questions.askQuestion(this.currentCategory());
+                this.console.log("The category is " + this.currentCategory);
+                this.questions.askQuestion(this.currentCategory);
             } else {
                 this.console.log(this.playerPool.getCurrentPlayer() + " is not getting out of the penalty box");
                 this.playerPool.isGettingOutOfPenaltyBox = false;
@@ -52,12 +54,12 @@ export class Game {
             }
 
             this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory());
-            this.questions.askQuestion(this.currentCategory());
+            this.console.log("The category is " + this.currentCategory);
+            this.questions.askQuestion(this.currentCategory);
         }
     }
 
-    private currentCategory(forcedCategory: string = ""): string {
+    public newCurrentCategory(forcedCategory: string = ""): string {
         if(forcedCategory !== "") {
             return forcedCategory;
         } else {
@@ -95,7 +97,7 @@ export class Game {
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
 
         this.playerPool.changeCurrentPlayer();
-        this.currentCategory(nextCategory);
+        this.currentCategory = this.newCurrentCategory(nextCategory);
 
         return true;
     }
@@ -152,6 +154,10 @@ export class Game {
 
     public getPlayerPool() : PlayerPool {
         return this.playerPool
+    }
+
+    public getCurrentCategory() : String {
+        return this.currentCategory
     }
 
     private setGoldRequiredToWin(gold) {
