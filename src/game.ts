@@ -9,6 +9,7 @@ export class Game {
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
+    private goldRequiredToWin: number;
 
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;

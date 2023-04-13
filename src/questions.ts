@@ -6,11 +6,10 @@ export class Questions {
     private _scienceQuestions: Array<string> = [];
     private _sportsQuestions: Array<string> = [];
     private _rockQuestions: Array<string> = [];
-    private console: IConsole;
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
 
-    constructor(nbQuestions:number, console : IConsole, isTechnoQuestions) {
+    constructor(nbQuestions:number, console : IConsole, isTechnoQuestions = false) {
         this._isTechnoQuestionsEnabled = isTechnoQuestions;
 
         for (let i = 0; i < nbQuestions; i++) {
@@ -75,15 +74,25 @@ export class Questions {
     }
 
     public askQuestion(category: String): void {
-        if (category == 'Pop')
-            this.console.log(this.shiftPopQuestion());
-        if (category == 'Science')
-            this.console.log(this.shiftScienceQuestion());
-        if (category == 'Sports')
-            this.console.log(this.shiftSportsQuestion());
-        if (category == 'Rock')
-            this.console.log(this.shiftRockQuestion());
-        if (category == 'Techno')
-            this.console.log(this.shiftTechnoQuestion());
+        let questionToAsk: string = ''
+
+        if (category == 'Pop') {
+            questionToAsk = this.shiftPopQuestion()
+            this._popQuestions.push(questionToAsk)
+        } else if (category == 'Science') {
+            questionToAsk = this.shiftScienceQuestion()
+            this._scienceQuestions.push(questionToAsk)
+        } else if (category == 'Sports') {
+            questionToAsk = this.shiftSportsQuestion()
+            this._sportsQuestions.push(questionToAsk)
+        } else if (category == 'Rock') {
+            questionToAsk = this.shiftRockQuestion()
+            this._rockQuestions.push(questionToAsk)
+        } else if (category == 'Techno') {
+            questionToAsk = this.shiftTechnoQuestion()
+            this._technoQuestions.push(questionToAsk)
+        }
+
+        this.console.log(questionToAsk);
     }
 }

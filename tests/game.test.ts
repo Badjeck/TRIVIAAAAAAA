@@ -58,8 +58,8 @@ describe('The test environment', () => {
         game.roll(3);
         game.wasCorrectlyAnswered();
 
-        expect(console.content).to.includes('Techno');
-        expect(console.content).not.to.includes('Rock');
+        expect(console.content).to.includes('Techno Question 0');
+        expect(console.content).not.to.includes('Rock Question 0');
     })
 
     it("should ask rock questions if techno questions are not enabled", () => {
@@ -72,8 +72,8 @@ describe('The test environment', () => {
         game.roll(3);
         game.wasCorrectlyAnswered();
 
-        expect(console.content).to.includes('Rock');
-        expect(console.content).not.to.includes('Techno');
+        expect(console.content).to.includes('Rock Question 0');
+        expect(console.content).not.to.includes('Techno Question 0');
     })
 
     it('first player should leave a game', () => {
@@ -141,16 +141,15 @@ describe('The test environment', () => {
 
     it('should have a infinite deck', function () {
         const consoleSpy = new ConsoleSpy();
-        let index = 0;
 
-        const questions = new Questions(consoleSpy, 50)
+        const questions = new Questions(1, consoleSpy)
 
-        while (index < 1000) {
-            questions.askQuestion('Pop')
-            expect(consoleSpy.content).to.not.includes("undefined")
+        questions.askQuestion('Pop')
+        const firstQuestionAsked = consoleSpy.content[consoleSpy.content.length - 1]
 
-            index++
-        }
+        questions.askQuestion('Pop')
+        const secondQuestionAsked = consoleSpy.content[consoleSpy.content.length - 1]
+        expect(firstQuestionAsked).to.equals(secondQuestionAsked)
     });
 
     it('game should run until player reach gold required to win', () => {
