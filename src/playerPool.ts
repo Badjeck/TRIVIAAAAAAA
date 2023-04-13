@@ -52,6 +52,14 @@ export class PlayerPool {
         this._isGettingOutOfPenaltyBox = value;
     }
 
+    public getTimesInPenaltyBox(playerName: string): number {
+        const playerIndex = this.players.indexOf(playerName);
+        if (playerIndex === -1) {
+            throw new Error(`Player ${playerName} not found in the player pool`);
+        }
+        return this.inPenaltyBox.filter((inPenaltyBox, index) => index !== playerIndex).length;
+    }
+
     public howManyPlayers(): number {
         return this.players.length;
     }

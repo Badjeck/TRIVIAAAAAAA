@@ -41,12 +41,20 @@ export class Game {
         this.console.log("They have rolled a " + roll);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
+            const timesInPenaltyBox = this.playerPool.getTimesInPenaltyBox(this.playerPool.getCurrentPlayerName());
+            const getOutProbability = 1 / (timesInPenaltyBox + 1);
             if (roll % 2 != 0) {
-                this.playerPool.isGettingOutOfPenaltyBox = true;
-                this.playerPool.setCurrentPlayerInPenaltyBox(false)
+                if (Math.random() < getOutProbability) {
+                    this.playerPool.isGettingOutOfPenaltyBox = true;
+                    this.playerPool.inPenaltyBox[this.playerPool.currentPlayer] = false;
+                    this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
+                } else {
+                    this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
+                    this.playerPool.isGettingOutOfPenaltyBox = false;
+                    return;
+                }
 
-                this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
-                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
+                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
                 if (this.playerPool.getCurrentPlayerPlaces() > 11) {
                     this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12) ;
                 }
@@ -59,7 +67,6 @@ export class Game {
                 this.playerPool.isGettingOutOfPenaltyBox = false;
             }
         } else {
-
             this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
             if (this.playerPool.getCurrentPlayerPlaces() > 11) {
                 this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
