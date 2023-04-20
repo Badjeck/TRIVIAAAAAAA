@@ -118,6 +118,14 @@ export class PlayerPool {
             this._extraGold[this._currentPlayer] = 0;
     }
 
+    public getPurseOfPlayer(playerName : string):number
+    {
+         const playerIndex = this._players.indexOf(playerName);
+         if(playerIndex === -1)
+            throw new Error("Player not found");
+        return this.purses[playerIndex]
+    }
+
     private addCoinToCurrentPlayerPurses() {
         const player : string= this.getCurrentPlayerName();
         const extraGold = this.getCurrentPlayerExtraGold()
