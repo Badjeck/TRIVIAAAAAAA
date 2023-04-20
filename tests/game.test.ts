@@ -163,8 +163,8 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content.toString()).to.include("8 Gold Coins");
-        expect(consoleSpy.content.toString()).to.not.include("9 Gold Coins");
+        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
+
     });
 
     it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
@@ -185,8 +185,7 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content.toString()).to.include("6 Gold Coins");
-        expect(consoleSpy.content.toString()).to.not.include("7 Gold Coins");
+        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 3 Gold Coin(s) with 2 bonus Gold Coin(s) with the win in a row, Pet now has 6 Gold Coin(s).");
     });
 
     it('When a player answer correctly in a row, should gain more coins',()=>{

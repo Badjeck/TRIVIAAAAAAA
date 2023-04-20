@@ -84,7 +84,7 @@ export class Game {
     }
 
     private didPlayerWin(): boolean {
-        return !(this.playerPool.getCurrentPlayerPurses() == this.goldRequiredToWin)
+        return !(this.playerPool.getCurrentPlayerPurses() >= this.goldRequiredToWin)
     }
 
     public wrongAnswer(): boolean {

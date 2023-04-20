@@ -108,23 +108,23 @@ export class PlayerPool {
     {
         let currentPlayerWinInARow = this._winsInARow[this._currentPlayerIndex];
         if(isCorrect){
-            this.addCoinToCurrentPlayerCurses();
+            this.addCoinToCurrentPlayerPurses();
             this._winsInARow[this._currentPlayerIndex]++;
         }
         else
             this._winsInARow[this._currentPlayerIndex] = 0;
     }
 
-    private addCoinToCurrentPlayerCurses() {
-        const playerName = this.getCurrentPlayer();
-        const winInARow = this.getCurrentPlayerRightAwnserStrike()
-        const coinsGains = 1 + winInARow;
+    private addCoinToCurrentPlayerPurses() {
+        const player : string= this.getCurrentPlayer();
+        const extraGold = this.getCurrentPlayerRightAwnserStrike()
+        const coinsGains = 1 + extraGold;
         this.purses[this.currentPlayerIndex] += coinsGains;
         const playerCurrentPurse = this.purses[this.currentPlayerIndex]; 
-        if(this.getCurrentPlayerRightAwnserStrike()>0)
-            this.console.log(`${playerName} now has gain ${coinsGains} Gold Coin(s) with ${winInARow} bonus Gold Coin(s) with the win in a row, ${playerName} now has ${playerCurrentPurse} Gold Coin(s).`)
+        if(this.getCurrentPlayerRightAwnserStrike() > 0)
+            this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) with ${extraGold} bonus Gold Coin(s) with the win in a row, ${player} now has ${playerCurrentPurse} Gold Coin(s).`)
         else
-            this.console.log(`${playerName} now has gain ${coinsGains} Gold Coin(s) and now has ${playerCurrentPurse} Gold Coin(s).`)
+            this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) and now has ${playerCurrentPurse} Gold Coin(s).`)
 
     }
 }
