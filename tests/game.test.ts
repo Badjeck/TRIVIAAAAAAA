@@ -1,13 +1,17 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
+import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
-import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
 import {Questions} from "../src/questions";
 
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
+    });
+
+    it("should access game", function () {
+        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -41,7 +45,60 @@ describe('The test environment', () => {
         game.addPlayer('Luffy')
 
         expect(() => game.roll(5)).to.throw(Error)
-    })
+    });
+
+    it('should a player use a joker card', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
+
+        players.forEach((player) => game.addPlayer(player));
+
+        game.roll(4);
+        game.currentPlayerTryUseJoker();
+
+        expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
+    });
+
+    it('2 different players should be able to use a joker card', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
+
+        players.forEach((player) => game.addPlayer(player));
+
+        game.roll(4);
+        game.currentPlayerTryUseJoker();
+
+        expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
+
+        game.roll(4);
+        game.currentPlayerTryUseJoker();
+
+        expect(consoleSpy.content.join('')).to.include('Ed used a Joker');
+    });
+
+    it('should a player not use a joker card twice per game', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat'];
+
+        players.forEach((player) => game.addPlayer(player));
+
+        game.roll(4);
+        game.currentPlayerTryUseJoker();
+
+        game.roll(4);
+        game.wasCorrectlyAnswered();
+        game.roll(4);
+        game.wasCorrectlyAnswered();
+
+        game.roll(4);
+        game.currentPlayerTryUseJoker();
+
+        expect(consoleSpy.content.join('')).to.include('Pet already used a Joker');
+    });
+
 
     it("should ask techno questions if techno questions are enabled", () => {
         const console = new ConsoleSpy();
@@ -224,5 +281,18 @@ describe('The test environment', () => {
         expect(consoleSpy.content).to.includes("Pet now has gain 1 Gold Coin(s) and now has 1 Gold Coin(s).");
         expect(consoleSpy.content).to.includes("Pet now has gain 2 Gold Coin(s) with 1 bonus Gold Coin(s) with the win in a row, Pet now has 3 Gold Coin(s).");
 
-    })
+    });
+    
+    it("should not use joker if player has no joker", () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+
+        game.roll(3);
+        game.currentPlayerTryUseJoker();
+
+        expect(consoleSpy.content).not.to.includes("has used their Joker");
+    });
 });

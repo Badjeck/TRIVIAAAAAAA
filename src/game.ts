@@ -5,6 +5,7 @@ import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
 
 export class Game {
+
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
@@ -20,12 +21,13 @@ export class Game {
     }
 
     public addPlayer(name: string): boolean {
+        this.playerPool.usedJoker[this.playerPool.howManyPlayers()] = false;
         return this.playerPool.addPlayer(name)
     }
 
     public roll(roll: number) {
         this.checkGameHadGoodPlayersNumber();
-        this.console.log(this.playerPool.getCurrentPlayer() + " is the current player");
+        this.console.log(this.playerPool.getCurrentPlayerName() + " is the current player");
         this.console.log("They have rolled a " + roll);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
@@ -33,17 +35,17 @@ export class Game {
                 this.playerPool.isGettingOutOfPenaltyBox = true;
                 this.playerPool.setCurrentPlayerInPenaltyBox(false)
 
-                this.console.log(this.playerPool.getCurrentPlayer() + " is getting out of the penalty box");
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
                 this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
                 if (this.playerPool.getCurrentPlayerPlaces() > 11) {
                     this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12) ;
                 }
 
-                this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
+                this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
                 this.console.log("The category is " + this.currentCategory);
                 this.questions.askQuestion(this.currentCategory);
             } else {
-                this.console.log(this.playerPool.getCurrentPlayer() + " is not getting out of the penalty box");
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
                 this.playerPool.isGettingOutOfPenaltyBox = false;
             }
         } else {
@@ -53,8 +55,9 @@ export class Game {
                 this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
             }
 
-            this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
+            this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
             this.console.log("The category is " + this.currentCategory);
+
             this.questions.askQuestion(this.currentCategory);
         }
     }
@@ -94,7 +97,7 @@ export class Game {
     public wrongAnswer(nextCategory: string = ""): boolean {
         this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
-        this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
+        this.console.log(this.playerPool.getCurrentPlayerName() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
 
         this.playerPool.changeCurrentPlayer();
@@ -139,8 +142,12 @@ export class Game {
     }
 
     public makeThePlayerQuit(): void {
-        this.console.log(`${this.playerPool.getCurrentPlayer()} leaves the game`)
+        this.console.log(`${this.playerPool.getCurrentPlayerName()} leaves the game`)
         this.playerPool.removeCurrentPlayer()
+    }
+
+    public currentPlayerTryUseJoker(){
+        this.playerPool.currentPlayerUseJoker();
     }
 
     public getInPenaltyBox(): boolean[]
