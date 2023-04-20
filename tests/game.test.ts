@@ -281,7 +281,8 @@ describe('The test environment', () => {
         expect(consoleSpy.content).to.includes("Pet now has gain 1 Gold Coin(s) and now has 1 Gold Coin(s).");
         expect(consoleSpy.content).to.includes("Pet now has gain 2 Gold Coin(s) with 1 bonus Gold Coin(s) with the win in a row, Pet now has 3 Gold Coin(s).");
 
-    })
+    });
+    
     it("should not use joker if player has no joker", () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
@@ -290,8 +291,8 @@ describe('The test environment', () => {
         game.addPlayer('Ed')
 
         game.roll(3);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
-        expect(consoleSpy.content).not.to.include("has used their Joker");
+        expect(consoleSpy.content).not.to.includes("has used their Joker");
     });
 });

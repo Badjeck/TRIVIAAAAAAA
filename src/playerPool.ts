@@ -40,7 +40,7 @@ export class PlayerPool {
         return this._currentPlayer;
     }
 
-    set currentPlayerIndex(value: number) {
+    set currentPlayer(value: number) {
         this._currentPlayer = value;
     }
 
@@ -74,33 +74,33 @@ export class PlayerPool {
     }
 
     public removeCurrentPlayer() {
-        this.players.splice(this.currentPlayerIndex, 1)
+        this.players.splice(this.currentPlayer, 1)
     }
 
     public isCurrentPlayerIsInPenaltyBox() {
-        return this.inPenaltyBox[this.currentPlayerIndex];
+        return this.inPenaltyBox[this.currentPlayer];
     }
 
     public getCurrentPlayerPlaces() {
-        return this.places[this.currentPlayerIndex]
+        return this.places[this.currentPlayer]
     }
 
     public setCurrentPlayerPlaces(newPlace: number) {
-        this.places[this.currentPlayerIndex] = newPlace;
+        this.places[this.currentPlayer] = newPlace;
     }
 
     public getCurrentPlayerPurses() {
-        return this.purses[this.currentPlayerIndex];
+        return this.purses[this.currentPlayer];
     }
 
     public setCurrentPlayerInPenaltyBox(bool: boolean) {
-        this.inPenaltyBox[this.currentPlayerIndex] = bool;
+        this.inPenaltyBox[this.currentPlayer] = bool;
     }
 
     public changeCurrentPlayer() {
-        this.currentPlayerIndex += 1;
-        if (this.currentPlayerIndex == this.players.length)
-            this.currentPlayerIndex = 0;
+        this.currentPlayer += 1;
+        if (this.currentPlayer == this.players.length)
+            this.currentPlayer = 0;
     }
 
     public getCurrentPlayerExtraGold(): number
@@ -122,8 +122,8 @@ export class PlayerPool {
         const player : string= this.getCurrentPlayerName();
         const extraGold = this.getCurrentPlayerExtraGold()
         const coinsGains = 1 + extraGold;
-        this.purses[this.currentPlayerIndex] += coinsGains;
-        const playerCurrentPurse = this.purses[this.currentPlayerIndex]; 
+        this.purses[this.currentPlayer] += coinsGains;
+        const playerCurrentPurse = this.purses[this.currentPlayer]; 
         if(extraGold > 0)
             this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) with ${extraGold} bonus Gold Coin(s) with the win in a row, ${player} now has ${playerCurrentPurse} Gold Coin(s).`)
         else
