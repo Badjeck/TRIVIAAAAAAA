@@ -12,12 +12,14 @@ describe("playerPool Test", () => {
 
     describe("out Value Test", () => {
 
-        // describe("addPlaayer", () => {
+        describe("addPlayer", () => {
+            it("is player is added", () => {
+                playerPool.addPlayer('john')
+                playerPool.currentPlayer = 0;
 
-        //     it("is player is added", () => {
-        //         playerPool.addPlayer()
-        //     })
-        // })
+                // expect(playerPool.getCurrentPlayerName()).to.be("john")
+            })
+        })
 
         describe("count Player", () => {
 
