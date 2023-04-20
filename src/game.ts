@@ -5,17 +5,18 @@ import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
 
 export class Game {
-    private currentPlayer: number = 0;
     private questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
     private goldRequiredToWin: number;
+    private currentCategory = "";
 
     constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
         this.console = console;
         this.questions = new Questions(50, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
+        this.currentCategory = this.newCurrentCategory()
     }
 
     public addPlayer(name: string): boolean {
@@ -30,8 +31,7 @@ export class Game {
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
             if (roll % 2 != 0) {
                 this.playerPool.isGettingOutOfPenaltyBox = true;
-                this.playerPool.inPenaltyBox[this.currentPlayer] = false
-
+                this.playerPool.setCurrentPlayerInPenaltyBox(false)
 
                 this.console.log(this.playerPool.getCurrentPlayer() + " is getting out of the penalty box");
                 this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
@@ -40,8 +40,8 @@ export class Game {
                 }
 
                 this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-                this.console.log("The category is " + this.currentCategory());
-                this.questions.askQuestion(this.currentCategory());
+                this.console.log("The category is " + this.currentCategory);
+                this.questions.askQuestion(this.currentCategory);
             } else {
                 this.console.log(this.playerPool.getCurrentPlayer() + " is not getting out of the penalty box");
                 this.playerPool.isGettingOutOfPenaltyBox = false;
@@ -54,46 +54,51 @@ export class Game {
             }
 
             this.console.log(this.playerPool.getCurrentPlayer() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory());
-            this.questions.askQuestion(this.currentCategory());
+            this.console.log("The category is " + this.currentCategory);
+            this.questions.askQuestion(this.currentCategory);
         }
     }
 
-    private currentCategory(): string {
-        if (this.playerPool.getCurrentPlayerPlaces() == 0)
-            return 'Pop';
-        if (this.playerPool.getCurrentPlayerPlaces() == 4)
-            return 'Pop';
-        if (this.playerPool.getCurrentPlayerPlaces() == 8)
-            return 'Pop';
-        if (this.playerPool.getCurrentPlayerPlaces() == 1)
-            return 'Science';
-        if (this.playerPool.getCurrentPlayerPlaces() == 5)
-            return 'Science';
-        if (this.playerPool.getCurrentPlayerPlaces() == 9)
-            return 'Science';
-        if (this.playerPool.getCurrentPlayerPlaces() == 2)
-            return 'Sports';
-        if (this.playerPool.getCurrentPlayerPlaces() == 6)
-            return 'Sports';
-        if (this.playerPool.getCurrentPlayerPlaces() == 10)
-            return 'Sports';
-        if (this.questions.getIsTechnoQuestionsEnabled())
-            return 'Techno';
-        return 'Rock';
+    public newCurrentCategory(forcedCategory: string = ""): string {
+        if(forcedCategory !== "") {
+            return forcedCategory;
+        } else {
+            if (this.playerPool.getCurrentPlayerPlaces() == 0)
+                return 'Pop';
+            if (this.playerPool.getCurrentPlayerPlaces() == 4)
+                return 'Pop';
+            if (this.playerPool.getCurrentPlayerPlaces() == 8)
+                return 'Pop';
+            if (this.playerPool.getCurrentPlayerPlaces() == 1)
+                return 'Science';
+            if (this.playerPool.getCurrentPlayerPlaces() == 5)
+                return 'Science';
+            if (this.playerPool.getCurrentPlayerPlaces() == 9)
+                return 'Science';
+            if (this.playerPool.getCurrentPlayerPlaces() == 2)
+                return 'Sports';
+            if (this.playerPool.getCurrentPlayerPlaces() == 6)
+                return 'Sports';
+            if (this.playerPool.getCurrentPlayerPlaces() == 10)
+                return 'Sports';
+            if (this.questions.getIsTechnoQuestionsEnabled())
+                return 'Techno';
+            return 'Rock';
+        }
     }
 
     private didPlayerWin(): boolean {
         return !(this.playerPool.getCurrentPlayerPurses() >= this.goldRequiredToWin)
     }
 
-    public wrongAnswer(): boolean {
+    public wrongAnswer(nextCategory: string = ""): boolean {
         this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
-    
+
         this.playerPool.changeCurrentPlayer();
+        this.currentCategory = this.newCurrentCategory(nextCategory);
 
         return true;
     }
@@ -150,6 +155,10 @@ export class Game {
 
     public getPlayerPool() : PlayerPool {
         return this.playerPool
+    }
+
+    public getCurrentCategory() : String {
+        return this.currentCategory
     }
 
     private setGoldRequiredToWin(gold) {
