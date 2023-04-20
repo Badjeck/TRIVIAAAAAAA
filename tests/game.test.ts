@@ -55,7 +55,7 @@ describe('The test environment', () => {
         players.forEach((player) => game.addPlayer(player));
 
         game.roll(4);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
         expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
     });
@@ -68,12 +68,12 @@ describe('The test environment', () => {
         players.forEach((player) => game.addPlayer(player));
 
         game.roll(4);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
         expect(consoleSpy.content.join('')).to.include('Pet used a Joker');
 
         game.roll(4);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
         expect(consoleSpy.content.join('')).to.include('Ed used a Joker');
     });
@@ -86,7 +86,7 @@ describe('The test environment', () => {
         players.forEach((player) => game.addPlayer(player));
 
         game.roll(4);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
         game.roll(4);
         game.wasCorrectlyAnswered();
@@ -94,7 +94,7 @@ describe('The test environment', () => {
         game.wasCorrectlyAnswered();
 
         game.roll(4);
-        game.useJoker();
+        game.currentPlayerTryUseJoker();
 
         expect(consoleSpy.content.join('')).to.include('Pet already used a Joker');
     });

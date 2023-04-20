@@ -130,4 +130,23 @@ export class PlayerPool {
             this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) and now has ${playerCurrentPurse} Gold Coin(s).`)
 
     }
+
+    public currentPlayerUseJoker(): void {
+
+        if (this.isCurrentPlayerUsedJoker()) {
+            this.console.log(this.getCurrentPlayerName() + " already used a Joker.");
+        } else {
+            this.setCurrentPlayerUseJoker(true);
+            this.console.log(this.getCurrentPlayerName() + " used a Joker.");
+            this.changeCurrentPlayer();
+        }
+    }
+
+    private setCurrentPlayerUseJoker(used : boolean){
+        this._usedJoker[this._currentPlayer] = used;
+    }
+
+    private isCurrentPlayerUsedJoker():boolean {
+        return this._usedJoker[this._currentPlayer]
+    }
 }

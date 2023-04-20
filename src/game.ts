@@ -134,16 +134,6 @@ export class Game {
         }
     }
 
-    public useJoker(): void {
-        if (this.playerPool.usedJoker[this.playerPool.currentPlayer]) {
-            this.console.log(this.playerPool.getCurrentPlayerName() + " already used a Joker.");
-        } else {
-            this.playerPool.usedJoker[this.playerPool.currentPlayer] = true;
-            this.console.log(this.playerPool.getCurrentPlayerName() + " used a Joker.");
-            this.playerPool.changeCurrentPlayer();
-        }
-    }
-
     private checkGameHadGoodPlayersNumber() {
         if (this.playerPool.howManyPlayers() < 2) {
             throw new NotEnoughPlayerError();
@@ -154,6 +144,10 @@ export class Game {
     public makeThePlayerQuit(): void {
         this.console.log(`${this.playerPool.getCurrentPlayerName()} leaves the game`)
         this.playerPool.removeCurrentPlayer()
+    }
+
+    public currentPlayerTryUseJoker(){
+        this.playerPool.currentPlayerUseJoker();
     }
 
     public getInPenaltyBox(): boolean[]
