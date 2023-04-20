@@ -1,6 +1,5 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
-import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
@@ -9,10 +8,6 @@ import {Questions} from "../src/questions";
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
-    });
-
-    it("should access game", function () {
-        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -168,8 +163,8 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content).to.include("8 Gold Coins");
-        expect(consoleSpy.content).to.not.include("9 Gold Coins");
+        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
+
     });
 
     it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
@@ -190,8 +185,8 @@ describe('The test environment', () => {
 
         } while (notAWinner);
 
-        expect(consoleSpy.content).to.include("6 Gold Coins");
-        expect(consoleSpy.content).to.not.include("7 Gold Coins");
+        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 3 Gold Coin(s) with 2 bonus Gold Coin(s) with the win in a row, Pet now has 6 Gold Coin(s).");
+
     });
 
     it('player that answers wrongly to a question selects next category', () => {
@@ -209,4 +204,25 @@ describe('The test environment', () => {
 
         assert.include(game.getPlayerPool().players, players[0])
     });
+
+    it('When a player answer correctly in a row, should gain more coins',()=>{
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(2);
+        game.wasCorrectlyAnswered();
+
+        game.roll(2);
+        game.wrongAnswer();
+
+        game.roll(2);
+        game.wasCorrectlyAnswered();
+
+        expect(consoleSpy.content).to.includes("Pet now has gain 1 Gold Coin(s) and now has 1 Gold Coin(s).");
+        expect(consoleSpy.content).to.includes("Pet now has gain 2 Gold Coin(s) with 1 bonus Gold Coin(s) with the win in a row, Pet now has 3 Gold Coin(s).");
+
+    })
 });

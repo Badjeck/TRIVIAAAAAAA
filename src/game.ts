@@ -88,10 +88,11 @@ export class Game {
     }
 
     private didPlayerWin(): boolean {
-        return !(this.playerPool.getCurrentPlayerPurses() == this.goldRequiredToWin)
+        return !(this.playerPool.getCurrentPlayerPurses() >= this.goldRequiredToWin)
     }
 
     public wrongAnswer(nextCategory: string = ""): boolean {
+        this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
@@ -106,7 +107,7 @@ export class Game {
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
             if (this.playerPool.isGettingOutOfPenaltyBox) {
                 this.console.log('Answer was correct!!!!');
-                this.playerPool.addCoinToCurrentPlayerCurses();
+                this.playerPool.currentPlayerAnswerRight(true);
 
                 var winner = this.didPlayerWin();
                 this.playerPool.changeCurrentPlayer()
@@ -121,7 +122,7 @@ export class Game {
         } else {
 
             this.console.log("Answer was correct!!!!");
-            this.playerPool.addCoinToCurrentPlayerCurses()
+            this.playerPool.currentPlayerAnswerRight(true);
 
             var winner = this.didPlayerWin();
             this.playerPool.changeCurrentPlayer()
