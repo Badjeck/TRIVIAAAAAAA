@@ -42,8 +42,8 @@ export class Game {
                 }
 
                 this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-                this.console.log("The category is " + this.currentCategory());
-                this.questions.askQuestion(this.currentCategory());
+                this.console.log("The category is " + this.currentCategory);
+                this.questions.askQuestion(this.currentCategory);
             } else {
                 this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
                 this.playerPool.isGettingOutOfPenaltyBox = false;
@@ -56,9 +56,9 @@ export class Game {
             }
 
             this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory());
+            this.console.log("The category is " + this.currentCategory);
 
-            this.questions.askQuestion(this.currentCategory());
+            this.questions.askQuestion(this.currentCategory);
         }
     }
 

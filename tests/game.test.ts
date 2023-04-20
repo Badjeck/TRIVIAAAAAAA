@@ -3,7 +3,6 @@ import {describe, it} from 'mocha';
 import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
-import {NotEnoughPlayerError} from "../src/errors/NotEnoughPlayerError";
 import {Questions} from "../src/questions";
 
 describe('The test environment', () => {
@@ -295,5 +294,4 @@ describe('The test environment', () => {
 
         expect(consoleSpy.content).not.to.include("has used their Joker");
     });
-});
 });
