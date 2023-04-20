@@ -186,6 +186,23 @@ describe('The test environment', () => {
         } while (notAWinner);
 
         expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 3 Gold Coin(s) with 2 bonus Gold Coin(s) with the win in a row, Pet now has 6 Gold Coin(s).");
+
+    });
+
+    it('player that answers wrongly to a question selects next category', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+
+        game.roll(4)
+        game.wrongAnswer("Rock")
+        game.roll(0)
+
+        expect(game.getCurrentCategory()).to.equals("Rock")
+
+        assert.include(game.getPlayerPool().players, players[0])
     });
 
     it('When a player answer correctly in a row, should gain more coins',()=>{
