@@ -88,7 +88,7 @@ export class Game {
     }
 
     public wrongAnswer(): boolean {
-        this.playerPool.currentPlayerAwnserRight(false);
+        this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayer() + " was sent to the penalty box");
         this.playerPool.setCurrentPlayerInPenaltyBox(true);
@@ -102,7 +102,7 @@ export class Game {
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
             if (this.playerPool.isGettingOutOfPenaltyBox) {
                 this.console.log('Answer was correct!!!!');
-                this.playerPool.currentPlayerAwnserRight(true);
+                this.playerPool.currentPlayerAnswerRight(true);
 
                 var winner = this.didPlayerWin();
                 this.playerPool.changeCurrentPlayer()
@@ -117,7 +117,7 @@ export class Game {
         } else {
 
             this.console.log("Answer was correct!!!!");
-            this.playerPool.currentPlayerAwnserRight(true);
+            this.playerPool.currentPlayerAnswerRight(true);
 
             var winner = this.didPlayerWin();
             this.playerPool.changeCurrentPlayer()
