@@ -213,7 +213,7 @@ export class Game {
     {
         if(this.isPlayerHadEnoughCoinToWin())
         {
-            this.leaderboard.push(this.playerPool.getCurrentPlayer());
+            this.leaderboard.push(this.playerPool.getCurrentPlayerName());
             if(this.isGameFinish())
                 this.endGame();
         }

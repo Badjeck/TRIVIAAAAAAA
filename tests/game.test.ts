@@ -313,7 +313,6 @@ describe('The test environment', () => {
 
         expect(consoleSpy.content).not.to.includes("has used their Joker");
     });
-    })
 
     it("With 4+ players;  a leaderboard is show; When 3 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
@@ -342,7 +341,7 @@ describe('The test environment', () => {
         expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°3 is Chat !");
         expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
         expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Dog lose with 3 Gold coin(s) !");  
-    })
+    });
 
     it("With 3 players;  a leaderboard is show; When 2 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
@@ -370,7 +369,8 @@ describe('The test environment', () => {
         expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°2 is Ed !");
         expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
         expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Chat lose with 3 Gold coin(s) !");  
-    })
+    });
+
     it("With 2 players;  a leaderboard is show; When 1 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy);
@@ -396,6 +396,6 @@ describe('The test environment', () => {
         expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°1 is Pet !");
         expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
         expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Ed lose with 3 Gold coin(s) !");  
-    })
+    });
 
 });
