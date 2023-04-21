@@ -171,7 +171,7 @@ export class Game {
 
     public getLeaderboardSize():number {return this.leaderboard.length;}
 
-    private isGameFinish():boolean
+    private isGameFinished():boolean
     {
         return this.leaderboard.length >= this.numberOfPlayerToWin;
     }
@@ -214,7 +214,7 @@ export class Game {
         if(this.isPlayerHadEnoughCoinToWin())
         {
             this.leaderboard.push(this.playerPool.getCurrentPlayerName());
-            if(this.isGameFinish())
+            if(this.isGameFinished())
                 this.endGame();
         }
     }
