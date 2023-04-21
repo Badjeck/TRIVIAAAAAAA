@@ -21,10 +21,12 @@ describe('The test environment', () => {
         expect(() => game.roll(5)).to.throw(Error)
 
         game.addPlayer('Pet')
+        game.initGame();
 
         expect(() => game.roll(5)).to.throw(Error)
 
         game.addPlayer('Ed')
+        game.initGame();
 
         expect(() => game.roll(5)).not.to.throw(Error)
     })
@@ -40,6 +42,9 @@ describe('The test environment', () => {
         game.addPlayer('Dog')
         game.addPlayer('Horse')
         game.addPlayer('Monkey')
+
+        game.initGame();
+
         expect(() => game.roll(5)).not.to.throw(Error)
 
         game.addPlayer('Luffy')
@@ -106,6 +111,8 @@ describe('The test environment', () => {
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
+        game.initGame();
+
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -120,6 +127,7 @@ describe('The test environment', () => {
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
+        game.initGame();
 
         game.roll(3);
         game.wasCorrectlyAnswered();
@@ -134,6 +142,7 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
         game.roll(4)
 
@@ -153,6 +162,7 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
         game.roll(4)
         game.wasCorrectlyAnswered()
@@ -173,6 +183,7 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
         game.roll(4)
         game.wrongAnswer()
@@ -208,19 +219,21 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
-        let notAWinner;
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
         do {
             try {
                 game.roll(Math.floor(Math.random() * 6) + 1);
-                notAWinner = game.wasCorrectlyAnswered();
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
             } catch (e) {
                 console.log(e)
             }
 
-        } while (notAWinner);
-
-        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+        expect(consoleSpy.content).to.includes("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
 
     });
 
@@ -230,19 +243,22 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
-        let notAWinner;
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
         do {
             try {
                 game.roll(Math.floor(Math.random() * 6) + 1);
-                notAWinner = game.wasCorrectlyAnswered();
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
             } catch (e) {
                 console.log(e)
             }
 
-        } while (notAWinner);
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
 
-        expect(consoleSpy.content[consoleSpy.content.length -1 ]).to.equals("Pet now has gain 3 Gold Coin(s) with 2 bonus Gold Coin(s) with the win in a row, Pet now has 6 Gold Coin(s).");
+        expect(consoleSpy.content).to.includes("Pet now has gain 3 Gold Coin(s) with 2 bonus Gold Coin(s) with the win in a row, Pet now has 6 Gold Coin(s).");
 
     });
 
@@ -252,6 +268,7 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
         game.roll(4)
         game.wrongAnswer("Rock")
@@ -268,6 +285,7 @@ describe('The test environment', () => {
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
+        game.initGame();
 
         game.roll(2);
         game.wasCorrectlyAnswered();
@@ -295,4 +313,89 @@ describe('The test environment', () => {
 
         expect(consoleSpy.content).not.to.includes("has used their Joker");
     });
+
+    it("With 4+ players;  a leaderboard is show; When 3 players win ,", ()=>{
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat','Dog']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+        
+        expect(consoleSpy.content[consoleSpy.content.length-6]).to.equals("The game is now over ! Now the rank of the top player");
+        expect(consoleSpy.content[consoleSpy.content.length-5]).to.equals("The player n°1 is Pet !");
+        expect(consoleSpy.content[consoleSpy.content.length-4]).to.equals("The player n°2 is Ed !");
+        expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°3 is Chat !");
+        expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
+        expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Dog lose with 3 Gold coin(s) !");  
+    });
+
+    it("With 3 players;  a leaderboard is show; When 2 players win ,", ()=>{
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed', 'Chat']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+
+        expect(consoleSpy.content[consoleSpy.content.length-5]).to.equals("The game is now over ! Now the rank of the top player");
+        expect(consoleSpy.content[consoleSpy.content.length-4]).to.equals("The player n°1 is Pet !");
+        expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°2 is Ed !");
+        expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
+        expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Chat lose with 3 Gold coin(s) !");  
+    });
+
+    it("With 2 players;  a leaderboard is show; When 1 players win ,", ()=>{
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
+        do {
+            try {
+                game.roll(Math.floor(Math.random() * 6) + 1);
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+
+        expect(consoleSpy.content[consoleSpy.content.length-4]).to.equals("The game is now over ! Now the rank of the top player");
+        expect(consoleSpy.content[consoleSpy.content.length-3]).to.equals("The player n°1 is Pet !");
+        expect(consoleSpy.content[consoleSpy.content.length-2]).to.equals("The following player(s) could not win in time !");
+        expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Ed lose with 3 Gold coin(s) !");  
+    });
+
 });
