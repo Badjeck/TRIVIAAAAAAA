@@ -6,17 +6,17 @@ import {PlayerPool} from "./playerPool";
 
 export class Game {
 
-    private questions: Questions;
+    private readonly questions: Questions;
     private readonly playerPool: PlayerPool;
     private console: IConsole;
-    private goldRequiredToWin: number;
+    private goldRequiredToWin= 6;
     private currentCategory = "";
     private numberOfPlayerToWin = 3;
     private leaderboard : Array<string> = new Array();
 
-    constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin = 6) {
+    constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
         this.console = console;
-        this.questions = new Questions(50, console, isTechnoEnabled);
+        this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
         this.currentCategory = this.newCurrentCategory()
@@ -136,7 +136,12 @@ export class Game {
         }
     }
 
-
+    public replay() {
+        this.console.log("Game restarted !");
+        this.leaderboard = new Array();
+        this.questions.replay();
+        this.playerPool.replay();
+    }
 
     public makeThePlayerQuit(): void {
         this.console.log(`${this.playerPool.getCurrentPlayerName()} leaves the game`)
@@ -184,9 +189,7 @@ export class Game {
     private setGoldRequiredToWin(gold) {
         if(gold >= 6) {
             this.goldRequiredToWin = gold;
-        } else {
-            this.goldRequiredToWin = 6;
-        }
+        } 
     }
 
     private checkGameHadGoodPlayersNumber() {

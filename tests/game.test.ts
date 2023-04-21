@@ -4,6 +4,7 @@ import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
+import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 
 describe('The test environment', () => {
     it('should pass', () => {
@@ -398,4 +399,53 @@ describe('The test environment', () => {
         expect(consoleSpy.content[consoleSpy.content.length-1]).to.equals("The player Ed lose with 3 Gold coin(s) !");  
     });
 
+
+    it('When the replay is use, then the game should restart with the same parameters', () => {
+        const consoleSpy = new ConsoleSpy();
+        let game = new Game(consoleSpy, true, 8);
+        const players: string[] = ['Pet', 'Ed']
+        let randomFake = new RandomFake();
+
+        players.forEach((player) => game.addPlayer(player))
+
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
+        do {
+            try {
+                game.roll(randomFake.rollADice6());
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+
+        expect(consoleSpy.content).to.includes("Techno Question 0");
+        expect(consoleSpy.content).to.includes("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
+
+        game.replay()
+        numberOfWinner = 0
+        do {
+            try {
+                game.roll(randomFake.rollADice6());
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
+            } catch (e) {
+                console.log(e)
+            }
+
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+        
+        expect(consoleSpy.content).to.includes("Game restarted !");
+
+        //Remove init log 
+        consoleSpy.content.splice(0,4);
+
+        const part1 = consoleSpy.content.slice(0,consoleSpy.content.indexOf("Game restarted !"));
+        const part2 = consoleSpy.content.slice(consoleSpy.content.indexOf("Game restarted !")+1, consoleSpy.content.length);
+
+        expect(part1).to.eql(part2)
+        
+    });
 });
