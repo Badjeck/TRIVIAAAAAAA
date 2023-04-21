@@ -1,6 +1,7 @@
 import {IConsole} from "./Utils/IConsole";
 
 export class Questions {
+
     private console: IConsole;
     private _popQuestions: Array<string> = [];
     private _scienceQuestions: Array<string> = [];
@@ -8,19 +9,13 @@ export class Questions {
     private _rockQuestions: Array<string> = [];
     private _technoQuestions: Array<string> = [];
     private _isTechnoQuestionsEnabled: boolean = false;
+    private _numberOfQuestion : number;
 
     constructor(nbQuestions:number, console : IConsole, isTechnoQuestions = false) {
         this._isTechnoQuestionsEnabled = isTechnoQuestions;
+        this._numberOfQuestion = nbQuestions;
 
-        for (let i = 0; i < nbQuestions; i++) {
-            this.addPopQuestion(i)
-            this.addScienceQuestion(i);
-            this.addSportsQuestion(i);
-            if (this._isTechnoQuestionsEnabled)
-                this.addTechnoQuestion(i);
-            else
-                this.addRockQuestion(i);
-        }
+        this.generateQuestion();
 
         this.console = console;
     }
@@ -96,5 +91,28 @@ export class Questions {
         this.console.log(questionToAsk);
 
         return questionToAsk
+    }
+
+    public replay() {
+     this._popQuestions = [];
+     this._scienceQuestions = [];
+     this._sportsQuestions = [];
+     this._rockQuestions = [];
+     this._technoQuestions = [];
+
+     this.generateQuestion();
+    }
+
+    private generateQuestion()
+    {
+        for (let i = 0; i < this._numberOfQuestion; i++) {
+            this.addPopQuestion(i)
+            this.addScienceQuestion(i);
+            this.addSportsQuestion(i);
+            if (this._isTechnoQuestionsEnabled)
+                this.addTechnoQuestion(i);
+            else
+                this.addRockQuestion(i);
+        }
     }
 }

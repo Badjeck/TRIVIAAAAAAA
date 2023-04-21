@@ -150,6 +150,18 @@ export class PlayerPool {
         }
     }
 
+    public replay() {
+        this.players.forEach((player, index)=>{
+            this._places[index] = 0;
+            this._purses[index] = 0;
+            this._inPenaltyBox[index] = false;
+            this._extraGold[index] = 0;
+            this._usedJoker[index] = false;
+        });
+
+        this._currentPlayer = 0;
+    }
+
     private setCurrentPlayerUseJoker(used : boolean){
         this._usedJoker[this._currentPlayer] = used;
     }
