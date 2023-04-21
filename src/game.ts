@@ -138,6 +138,7 @@ export class Game {
 
     public replay() {
         this.console.log("Game restarted !");
+        this.leaderboard = new Array();
         this.questions.replay();
         this.playerPool.replay();
     }

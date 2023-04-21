@@ -408,32 +408,35 @@ describe('The test environment', () => {
 
         players.forEach((player) => game.addPlayer(player))
 
-        let notAWinner;
+        let numberOfPlayerNeededToWin = game.getNumberOfPlayerNeededToWin();
+        let numberOfWinner = 0;
         do {
             try {
                 game.roll(randomFake.rollADice6());
-                notAWinner = game.wasCorrectlyAnswered();
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
             } catch (e) {
                 console.log(e)
             }
 
-        } while (notAWinner);
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
 
         expect(consoleSpy.content).to.includes("Techno Question 0");
         expect(consoleSpy.content).to.includes("Pet now has gain 4 Gold Coin(s) with 3 bonus Gold Coin(s) with the win in a row, Pet now has 10 Gold Coin(s).");
 
         game.replay()
-
+        numberOfWinner = 0
         do {
             try {
                 game.roll(randomFake.rollADice6());
-                notAWinner = game.wasCorrectlyAnswered();
+                game.wasCorrectlyAnswered();
+                numberOfWinner = game.getLeaderboardSize();
             } catch (e) {
                 console.log(e)
             }
 
-        } while (notAWinner);
-
+        } while (numberOfWinner < numberOfPlayerNeededToWin);
+        
         expect(consoleSpy.content).to.includes("Game restarted !");
 
         //Remove init log 
