@@ -1,23 +1,34 @@
 import { expect } from "chai";
 import {describe, beforeEach, it} from 'mocha';
 import { PlayerPool } from "../src/playerPool"
+import { ConsoleSpy } from "../src/Utils/ConsoleSpy";
 
 let playerPool: PlayerPool;
+let console: ConsoleSpy;
 
 describe("playerPool Test", () => {
 
     beforeEach( () => {
-        playerPool = new PlayerPool(console)
+        console = new ConsoleSpy();
+        playerPool = new PlayerPool(console);
     })
 
     describe("out Value Test", () => {
 
         describe("addPlayer", () => {
             it("is player is added", () => {
-                playerPool.addPlayer('john')
-                playerPool.currentPlayer = 0;
+                playerPool.addPlayer('john');
 
-                // expect(playerPool.getCurrentPlayerName()).to.be("john")
+                expect(playerPool.getCurrentPlayerName()).to.equals("john");
+            });
+
+
+            it("two players is added and the first is the current player", () => {
+                playerPool.addPlayer('john');
+                playerPool.addPlayer('billy');
+
+                expect(playerPool.players.length).to.equals(2);
+                expect(playerPool.getCurrentPlayerName()).to.equals("john");
             })
         })
 
@@ -41,7 +52,7 @@ describe("playerPool Test", () => {
             it("player count max", () => {
 
                 for (let i = 1; i <= 9 ;i++) {
-                    playerPool.addPlayer("")
+                    playerPool.addPlayer(`Player-${i}`)
                 }
 
                 expect(playerPool.howManyPlayers()).be.eq(9)

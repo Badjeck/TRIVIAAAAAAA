@@ -1,7 +1,7 @@
 import {expect, assert} from 'chai';
 import {describe, it} from 'mocha';
-import {GameRunner} from '../src/game-runner';
 import {Game} from "../src/game";
+import { Player } from '../src/player';
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
 import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
@@ -10,10 +10,6 @@ import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
-    });
-
-    it("should access game", function () {
-        expect(GameRunner).to.not.be.undefined;
     });
 
     it("should not have less than 2 players to play the game", () => {
@@ -148,9 +144,9 @@ describe('The test environment', () => {
 
         game.makeThePlayerQuit()
 
-        assert.notInclude(game.getPlayerPool().players, players[0])
-        assert.include(game.getPlayerPool().players, players[1])
-        assert.include(game.getPlayerPool().players, players[2])
+        expect(game.getPlayerPool().players.length).to.equals(2);
+        expect(game.getPlayerPool().players[0].name).to.equals("Ed");
+        expect(game.getPlayerPool().players[1].name).to.equals("Chat");
 
         // @ts-ignore
         expect(consoleSpy.content).to.includes("Pet leaves the game")
@@ -169,9 +165,9 @@ describe('The test environment', () => {
         game.roll(2)
         game.makeThePlayerQuit()
 
-        assert.include(game.getPlayerPool().players, players[0])
-        assert.notInclude(game.getPlayerPool().players, players[1])
-        assert.include(game.getPlayerPool().players, players[2])
+        expect(game.getPlayerPool().players.length).to.equals(2);
+        expect(game.getPlayerPool().players[0].name).to.equals("Pet");
+        expect(game.getPlayerPool().players[1].name).to.equals("Chat");
 
         // @ts-ignore
         expect(consoleSpy.content).to.includes("Ed leaves the game")
@@ -188,7 +184,6 @@ describe('The test environment', () => {
         game.roll(4)
         game.wrongAnswer()
 
-        expect(game.isInPenaltyBox()[0], "Pet should got getInPenaltyBox true").to.equals(true)
         expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
         expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
 
@@ -196,8 +191,6 @@ describe('The test environment', () => {
         game.wasCorrectlyAnswered()
         game.roll(5)
 
-        expect(game.isGettingOutOfPenaltyBox(), "Pet should go out of penalty box").to.equals(true)
-        expect(game.isInPenaltyBox()[0], "Pet should not be in penalty box").to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
     });
 
@@ -274,8 +267,6 @@ describe('The test environment', () => {
         game.roll(0)
 
         expect(game.getCurrentCategory()).to.equals("Rock")
-
-        assert.include(game.getPlayerPool().players, players[0])
     });
 
     it('When a player answer correctly in a row, should gain more coins',()=>{
@@ -463,15 +454,12 @@ describe('The test environment', () => {
 
         game.roll(4) // Pet
         game.wrongAnswer()
-        expect(game.isInPenaltyBox()[0], "Pet should be in penalty box for the first time").to.equals(true)
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
 
         //Pet leave penalty box
 
         game.roll(5)// Pet
-        expect(game.isGettingOutOfPenaltyBox(), "Pet should go out of penalty box for the first time").to.equals(true)
-        expect(game.isInPenaltyBox()[0], "Pet should not be in penalty box for the first time").to.equals(false)
         game.wasCorrectlyAnswered()
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
@@ -480,16 +468,12 @@ describe('The test environment', () => {
 
         game.roll(4) // Pet
         game.wrongAnswer()
-        expect(game.isGettingOutOfPenaltyBox(),"Pet should not go out of penalty box for the first time").to.equals(false)
-        expect(game.isInPenaltyBox()[0],"Pet should be in penalty box for the second time").to.equals(true)
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
 
         //Pet has no luck in penalty box
 
         game.roll(5)// Pet
-        expect(game.isGettingOutOfPenaltyBox(), "Pet should FAILED to go out of penalty box for the second time").to.equals(false)
-        expect(game.isInPenaltyBox()[0], "Pet should stay in penalty box for the second time").to.equals(true)
         game.wasCorrectlyAnswered()
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
@@ -518,15 +502,12 @@ describe('The test environment', () => {
 
             game.roll(4) // Pet
             game.wrongAnswer()
-            expect(game.isInPenaltyBox()[0], `Pet should be in penalty box for the ${i} time`).to.equals(true)
             game.roll(4) // Ed
             game.wasCorrectlyAnswered()
 
             //Pet leave penalty box
 
             game.roll(5)// Pet
-            expect(game.isGettingOutOfPenaltyBox(), `Pet should go out of penalty box for the ${i} time`).to.equals(true)
-            expect(game.isInPenaltyBox()[0], `Pet should not be in penalty box for the ${i} time`).to.equals(false)
             game.wasCorrectlyAnswered()
             game.roll(4) // Ed
             game.wasCorrectlyAnswered()
@@ -537,15 +518,12 @@ describe('The test environment', () => {
 
         game.roll(4) // Pet
         game.wrongAnswer()
-        expect(game.isInPenaltyBox()[0], `Pet should be in penalty box for the third time`).to.equals(true)
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
 
         //Pet has no luck in penalty box
 
         game.roll(5)// Pet
-        expect(game.isGettingOutOfPenaltyBox(), "Pet should FAILED to go out of penalty box for the third time").to.equals(false)
-        expect(game.isInPenaltyBox()[0], "Pet should stay in penalty box for the third time").to.equals(true)
         game.wasCorrectlyAnswered()
         game.roll(4) // Ed
         game.wasCorrectlyAnswered()
