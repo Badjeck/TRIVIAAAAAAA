@@ -42,27 +42,9 @@ export class Game {
         this.console.log(`${this.playerPool.getCurrentPlayerName()} have rolled a ${roll}`);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
-            if (roll % 2 != 0) {
-                const timesInPenaltyBox = this.playerPool.getCurrentPlayerTimesInPenaltyBox();
-                const getOutProbability = 1 / timesInPenaltyBox;
-                if (this.math.random() < getOutProbability) {
-                    this.playerPool.currentPlayerIsGettingOutOfPenaltyBox(true);
-                    this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
-
-                    this.moveAndAskQuestion(roll);
-                } else {
-                    this.console.log(this.playerPool.getCurrentPlayerName() + " is unlucky this time and stay in the penalty box");
-                    return;
-                }
- 
-               
-            } else {
-                this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
-            }
+           this.tryToGoOutOfPenaltyBox(roll);
         } else {
-
             this.moveAndAskQuestion(roll);
-
         }
     }
     
@@ -219,5 +201,27 @@ export class Game {
         return this.playerPool.getCurrentPlayerPurses() >= this.goldRequiredToWin
     }
 
+    private tryToGoOutOfPenaltyBox(roll:number)
+    {
+        if (roll % 2 != 0) {
+            if (this.gotLuckToGoOutOfPenaltyBox()) {
+                this.playerPool.currentPlayerIsGettingOutOfPenaltyBox(true);
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
+                this.moveAndAskQuestion(roll);
+            } else {
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is unlucky this time and stay in the penalty box");
+            }           
+        } else {
+            this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
+        }
+    }
+
+    private gotLuckToGoOutOfPenaltyBox(): boolean
+    {
+        const timesInPenaltyBox = this.playerPool.getCurrentPlayerTimesInPenaltyBox();
+        const getOutProbability = 1 / timesInPenaltyBox;
+
+        return this.math.random() < getOutProbability;
+    }
 
 }
