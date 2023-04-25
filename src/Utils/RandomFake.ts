@@ -1,5 +1,10 @@
+import { IMath } from "./IMath";
 
-export class RandomFake{
+export class RandomFake implements IMath{
+    
+    random(): number {
+        return 1;
+    }
     
     private diceCount = 1;
 

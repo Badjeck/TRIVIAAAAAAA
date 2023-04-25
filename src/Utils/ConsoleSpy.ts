@@ -5,4 +5,12 @@ export class ConsoleSpy implements IConsole{
     log(message: string) {
         this.content.push(message);
     }
+
+    public getCountedLog(): object
+    {
+        let countedLog = {};
+        this.content.map((current)=> countedLog[current] ? countedLog[current]++ : countedLog[current] = 1  )
+    
+        return countedLog
+    }
 }

@@ -6,6 +6,7 @@ import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
 import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 
+
 describe('The test environment', () => {
     it('should pass', () => {
         expect(true).to.be.true;
@@ -17,25 +18,23 @@ describe('The test environment', () => {
 
     it("should not have less than 2 players to play the game", () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
 
-        expect(() => game.roll(5)).to.throw(Error)
+        expect(() => game.initGame()).to.throw(Error)
 
         game.addPlayer('Pet')
-        game.initGame();
 
-        expect(() => game.roll(5)).to.throw(Error)
+        expect(() => game.initGame()).to.throw(Error)
 
         game.addPlayer('Ed')
-        game.initGame();
 
-        expect(() => game.roll(5)).not.to.throw(Error)
+        expect(() => game.initGame()).not.to.throw(Error)
     })
 
 
     it("should not have more than 6 players to play the game", () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
@@ -46,16 +45,16 @@ describe('The test environment', () => {
 
         game.initGame();
 
-        expect(() => game.roll(5)).not.to.throw(Error)
+        expect(() => game.initGame()).not.to.throw(Error)
 
         game.addPlayer('Luffy')
 
-        expect(() => game.roll(5)).to.throw(Error)
+        expect(() => game.initGame()).to.throw(Error)
     });
 
     it('should a player use a joker card', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat'];
 
         players.forEach((player) => game.addPlayer(player));
@@ -68,7 +67,7 @@ describe('The test environment', () => {
 
     it('2 different players should be able to use a joker card', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat'];
 
         players.forEach((player) => game.addPlayer(player));
@@ -86,7 +85,7 @@ describe('The test environment', () => {
 
     it('should a player not use a joker card twice per game', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat'];
 
         players.forEach((player) => game.addPlayer(player));
@@ -108,7 +107,7 @@ describe('The test environment', () => {
 
     it("should ask techno questions if techno questions are enabled", () => {
         const console = new ConsoleSpy();
-        const game = new Game(console, true);
+        const game = new Game(console, Math,true);
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
@@ -124,7 +123,7 @@ describe('The test environment', () => {
 
     it("should ask rock questions if techno questions are not enabled", () => {
         const console = new ConsoleSpy();
-        const game = new Game(console);
+        const game = new Game(console, Math);
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
@@ -139,7 +138,7 @@ describe('The test environment', () => {
 
     it('first player should leave a game', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
@@ -159,7 +158,7 @@ describe('The test environment', () => {
 
     it('second player should leave a game', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
@@ -180,7 +179,7 @@ describe('The test environment', () => {
     
     it('player should leave prison', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
@@ -189,8 +188,7 @@ describe('The test environment', () => {
         game.roll(4)
         game.wrongAnswer()
 
-        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(false)
-        expect(game.getInPenaltyBox()[0]).to.equals(true)
+        expect(game.isInPenaltyBox()[0], "Pet should got getInPenaltyBox true").to.equals(true)
         expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
         expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
 
@@ -198,8 +196,8 @@ describe('The test environment', () => {
         game.wasCorrectlyAnswered()
         game.roll(5)
 
-        expect(game.getIsGettingOutOfPenaltyBox()).to.equals(true)
-        expect(game.getInPenaltyBox()[0]).to.equals(false)
+        expect(game.isGettingOutOfPenaltyBox(), "Pet should go out of penalty box").to.equals(true)
+        expect(game.isInPenaltyBox()[0], "Pet should not be in penalty box").to.equals(false)
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
     });
 
@@ -216,7 +214,7 @@ describe('The test environment', () => {
 
     it('game should run until player reach gold required to win', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy, false, 8);
+        const game = new Game(consoleSpy, Math, false, 8);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
@@ -240,7 +238,7 @@ describe('The test environment', () => {
 
     it('game should last until player reaches 6 gold if gold is set lower than 6', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy, false,2);
+        const game = new Game(consoleSpy, Math, false,2);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
@@ -265,7 +263,7 @@ describe('The test environment', () => {
 
     it('player that answers wrongly to a question selects next category', () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
@@ -282,7 +280,7 @@ describe('The test environment', () => {
 
     it('When a player answer correctly in a row, should gain more coins',()=>{
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
@@ -304,7 +302,7 @@ describe('The test environment', () => {
     
     it("should not use joker if player has no joker", () => {
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
@@ -317,7 +315,7 @@ describe('The test environment', () => {
 
     it("With 4+ players;  a leaderboard is show; When 3 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat','Dog']
 
         players.forEach((player) => game.addPlayer(player))
@@ -346,7 +344,7 @@ describe('The test environment', () => {
 
     it("With 3 players;  a leaderboard is show; When 2 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed', 'Chat']
 
         players.forEach((player) => game.addPlayer(player))
@@ -374,7 +372,7 @@ describe('The test environment', () => {
 
     it("With 2 players;  a leaderboard is show; When 1 players win ,", ()=>{
         const consoleSpy = new ConsoleSpy();
-        const game = new Game(consoleSpy);
+        const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed']
 
         players.forEach((player) => game.addPlayer(player))
@@ -402,7 +400,7 @@ describe('The test environment', () => {
 
     it('When the replay is use, then the game should restart with the same parameters', () => {
         const consoleSpy = new ConsoleSpy();
-        let game = new Game(consoleSpy, true, 8);
+        let game = new Game(consoleSpy, Math, true, 8);
         const players: string[] = ['Pet', 'Ed']
         let randomFake = new RandomFake();
 
@@ -447,5 +445,115 @@ describe('The test environment', () => {
 
         expect(part1).to.eql(part2)
         
+    });
+
+
+    //Should be parameterized, failed to, it's sad  
+    it('When player goes 2 time in penalty box, then it will got 1/2 chance to get out',() => {
+        const consoleSpy = new ConsoleSpy();
+        let math = new RandomFake();
+        math.random = () => 0.5; // if this is < to 1/2 then the player go out
+        const game = new Game(consoleSpy,math,false,100);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        //Pet enter penalty box
+
+        game.roll(4) // Pet
+        game.wrongAnswer()
+        expect(game.isInPenaltyBox()[0], "Pet should be in penalty box for the first time").to.equals(true)
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        //Pet leave penalty box
+
+        game.roll(5)// Pet
+        expect(game.isGettingOutOfPenaltyBox(), "Pet should go out of penalty box for the first time").to.equals(true)
+        expect(game.isInPenaltyBox()[0], "Pet should not be in penalty box for the first time").to.equals(false)
+        game.wasCorrectlyAnswered()
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        //Pet enter penalty box
+
+        game.roll(4) // Pet
+        game.wrongAnswer()
+        expect(game.isGettingOutOfPenaltyBox(),"Pet should not go out of penalty box for the first time").to.equals(false)
+        expect(game.isInPenaltyBox()[0],"Pet should be in penalty box for the second time").to.equals(true)
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        //Pet has no luck in penalty box
+
+        game.roll(5)// Pet
+        expect(game.isGettingOutOfPenaltyBox(), "Pet should FAILED to go out of penalty box for the second time").to.equals(false)
+        expect(game.isInPenaltyBox()[0], "Pet should stay in penalty box for the second time").to.equals(true)
+        game.wasCorrectlyAnswered()
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        let countedLog = consoleSpy.getCountedLog();
+        
+        expect(countedLog["Pet was sent to the penalty box"],"Pet was sent to the penalty box").to.equals(2);
+        expect(countedLog["Pet is getting out of the penalty box"],"Pet is getting out of the penalty box").to.equals(1);
+        expect(countedLog["Pet is unlucky this time and stay in the penalty box"], "Pet is unlucky this time and stay in the penalty box").to.equals(1);
+    });
+
+
+    it('When player goes 3 time in penalty box, then it will got 1/3 chance to get out',() => {
+        const consoleSpy = new ConsoleSpy();
+        let math = new RandomFake();
+        math.random = () => 0.4; // if this is < to 1/3 then the player go out
+        const game = new Game(consoleSpy,math);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        for(let i = 0; i < 2; i++)
+        {
+            //Pet enter penalty box
+
+            game.roll(4) // Pet
+            game.wrongAnswer()
+            expect(game.isInPenaltyBox()[0], `Pet should be in penalty box for the ${i} time`).to.equals(true)
+            game.roll(4) // Ed
+            game.wasCorrectlyAnswered()
+
+            //Pet leave penalty box
+
+            game.roll(5)// Pet
+            expect(game.isGettingOutOfPenaltyBox(), `Pet should go out of penalty box for the ${i} time`).to.equals(true)
+            expect(game.isInPenaltyBox()[0], `Pet should not be in penalty box for the ${i} time`).to.equals(false)
+            game.wasCorrectlyAnswered()
+            game.roll(4) // Ed
+            game.wasCorrectlyAnswered()
+
+        }
+
+        //Pet enter penalty box
+
+        game.roll(4) // Pet
+        game.wrongAnswer()
+        expect(game.isInPenaltyBox()[0], `Pet should be in penalty box for the third time`).to.equals(true)
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        //Pet has no luck in penalty box
+
+        game.roll(5)// Pet
+        expect(game.isGettingOutOfPenaltyBox(), "Pet should FAILED to go out of penalty box for the third time").to.equals(false)
+        expect(game.isInPenaltyBox()[0], "Pet should stay in penalty box for the third time").to.equals(true)
+        game.wasCorrectlyAnswered()
+        game.roll(4) // Ed
+        game.wasCorrectlyAnswered()
+
+        let countedLog = consoleSpy.getCountedLog();
+        
+        expect(countedLog["Pet was sent to the penalty box"],"Pet was sent to the penalty box").to.equals(3);
+        expect(countedLog["Pet is getting out of the penalty box"],"Pet is getting out of the penalty box").to.equals(2);
+        expect(countedLog["Pet is unlucky this time and stay in the penalty box"], "Pet is unlucky this time and stay in the penalty box").to.equals(1);
     });
 });

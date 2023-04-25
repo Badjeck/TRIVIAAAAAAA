@@ -8,6 +8,7 @@ export class PlayerPool {
     private _inPenaltyBox: Array<boolean> = [];
     private _extraGold: Array<number> = [];
     private _usedJoker: Array<boolean> = [];
+    private _numberOfTimeInPenaltyBox: Array<number> = [];
     private _currentPlayer: number = 0;
     private _isGettingOutOfPenaltyBox: boolean = false;
     private console;
@@ -52,6 +53,14 @@ export class PlayerPool {
         this._isGettingOutOfPenaltyBox = value;
     }
 
+    public getTimesInPenaltyBox(playerName: string): number {
+        const playerIndex = this.players.indexOf(playerName);
+        if (playerIndex === -1) {
+            throw new Error(`Player ${playerName} not found in the player pool`);
+        }
+        return this._numberOfTimeInPenaltyBox[playerIndex];
+    }
+
     public howManyPlayers(): number {
         return this.players.length;
     }
@@ -60,6 +69,7 @@ export class PlayerPool {
         this.places[this.howManyPlayers()] = 0;
         this.purses[this.howManyPlayers()] = 0;
         this._extraGold[this.howManyPlayers()] = 0;
+        this._numberOfTimeInPenaltyBox[this.howManyPlayers()] = 0;
         this.players.push(name);
         this.inPenaltyBox[this.howManyPlayers()] = false;
 
@@ -95,7 +105,13 @@ export class PlayerPool {
 
     public setCurrentPlayerInPenaltyBox(bool: boolean) {
         this.inPenaltyBox[this.currentPlayer] = bool;
-    }
+        if(bool)
+            {
+                this._numberOfTimeInPenaltyBox[this.currentPlayer]++;
+                this.isGettingOutOfPenaltyBox = false;
+            }
+            
+        }
 
     public changeCurrentPlayer() {
         this.currentPlayer += 1;

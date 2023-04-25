@@ -3,6 +3,7 @@ import {Questions} from "./questions";
 import {NotEnoughPlayerError} from "./errors/NotEnoughPlayerError";
 import {TooManyPlayerError} from "./errors/TooManyPlayerError";
 import {PlayerPool} from "./playerPool";
+import { IMath } from "./Utils/IMath";
 
 export class Game {
 
@@ -13,9 +14,11 @@ export class Game {
     private currentCategory = "";
     private numberOfPlayerToWin = 3;
     private leaderboard : Array<string> = new Array();
+    private math:IMath;
 
-    constructor(console : IConsole, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
+    constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
         this.console = console;
+        this.math= math;
         this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
@@ -32,45 +35,42 @@ export class Game {
      */
     public initGame()
     {
+        this.checkGameHadGoodPlayersNumber();
         this.defineNumberOfPlayerToWin();
     }
 
     public roll(roll: number) {
-        this.checkGameHadGoodPlayersNumber();
-        this.console.log(this.playerPool.getCurrentPlayerName() + " is the current player");
-        this.console.log("They have rolled a " + roll);
+        this.console.log(`${this.playerPool.getCurrentPlayerName()} is the current player`);
+        this.console.log(`${this.playerPool.getCurrentPlayerName()} have rolled a ${roll}`);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
             if (roll % 2 != 0) {
-                this.playerPool.isGettingOutOfPenaltyBox = true;
-                this.playerPool.setCurrentPlayerInPenaltyBox(false)
+                const timesInPenaltyBox = this.playerPool.getTimesInPenaltyBox(this.playerPool.getCurrentPlayerName());
+                const getOutProbability = 1 / timesInPenaltyBox;
+                if (this.math.random() < getOutProbability) {
+                    this.playerPool.isGettingOutOfPenaltyBox = true;
+                    this.playerPool.setCurrentPlayerInPenaltyBox(false)
+                    this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
 
-                this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
-                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll );
-                if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-                    this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12) ;
+                    this.moveAndAskQuestion(roll);
+                } else {
+                    this.console.log(this.playerPool.getCurrentPlayerName() + " is unlucky this time and stay in the penalty box");
+                    this.playerPool.isGettingOutOfPenaltyBox = false;
+                    return;
                 }
-
-                this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-                this.console.log("The category is " + this.currentCategory);
-                this.questions.askQuestion(this.currentCategory);
+ 
+               
             } else {
                 this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
                 this.playerPool.isGettingOutOfPenaltyBox = false;
             }
         } else {
 
-            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
-            if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-                this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
-            }
+            this.moveAndAskQuestion(roll);
 
-            this.console.log(this.playerPool.getCurrentPlayerName() + "'s new location is " + this.playerPool.getCurrentPlayerPlaces());
-            this.console.log("The category is " + this.currentCategory);
-
-            this.questions.askQuestion(this.currentCategory);
         }
     }
+    
 
     public newCurrentCategory(forcedCategory: string = ""): string {
         if(forcedCategory !== "") {
@@ -113,27 +113,16 @@ export class Game {
     }
 
     public wasCorrectlyAnswered() {
-        if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
-            if (this.playerPool.isGettingOutOfPenaltyBox) {
-                this.console.log('Answer was correct!!!!');
-                this.playerPool.currentPlayerAnswerRight(true);
-                this.addPlayerToLeaderboardIfWin()
-                this.playerPool.changeCurrentPlayer()
-
-            } else {
-                this.playerPool.changeCurrentPlayer()
-            }
-
-
-        } else {
-
-            this.console.log("Answer was correct!!!!");
+        if( this.playerPool.isCurrentPlayerIsInPenaltyBox() && !this.playerPool.isGettingOutOfPenaltyBox)
+            this.playerPool.changeCurrentPlayer()
+        else{
+            this.console.log('Answer was correct!!!!');
             this.playerPool.currentPlayerAnswerRight(true);
-
             this.addPlayerToLeaderboardIfWin()
             this.playerPool.changeCurrentPlayer()
-
+            this.playerPool.isGettingOutOfPenaltyBox = false;
         }
+        
     }
 
     public replay() {
@@ -152,12 +141,12 @@ export class Game {
         this.playerPool.currentPlayerUseJoker();
     }
 
-    public getInPenaltyBox(): boolean[]
+    public isInPenaltyBox(): boolean[]
     {
         return this.playerPool.inPenaltyBox
     }
 
-    public getIsGettingOutOfPenaltyBox(): boolean
+    public isGettingOutOfPenaltyBox(): boolean
     {
         return this.playerPool.isGettingOutOfPenaltyBox
     }
@@ -175,6 +164,17 @@ export class Game {
     }
 
     public getLeaderboardSize():number {return this.leaderboard.length;}
+
+    private moveAndAskQuestion(roll:number)
+    {
+        this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
+        if (this.playerPool.getCurrentPlayerPlaces() > 11) {
+            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
+        }
+        this.console.log(`${this.playerPool.getCurrentPlayerName()}'s new location is ${this.playerPool.getCurrentPlayerPlaces()}`);
+        this.console.log("The category is " + this.currentCategory);
+        this.questions.askQuestion(this.currentCategory);
+    }
 
     private isGameFinished():boolean
     {
