@@ -56,10 +56,6 @@ export class Questions {
         return this._isTechnoQuestionsEnabled;
     }
 
-    public setIsTechnoQuestionsEnabled(value: boolean): void {
-        this._isTechnoQuestionsEnabled = value;
-    }
-
     public addTechnoQuestion(index: number){
         this._technoQuestions.push("Techno Question " + index)
     }

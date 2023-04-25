@@ -39,10 +39,6 @@ export class PlayerPool {
         return this._currentPlayer.place
     }
 
-    public setCurrentPlayerPlaces(numberOfPlaceToMove: number) {
-        this._currentPlayer.move(numberOfPlaceToMove);
-    }
-
     public getCurrentPlayerPurses() {
         return this._currentPlayer.purse;
     }
@@ -76,6 +72,11 @@ export class PlayerPool {
     }
 
     public getLeaderboardSize():number {return this._leaderboard.length;}
+
+
+    public moveCurrentPlayer(numberOfPlaceToMove: number) {
+        this._currentPlayer.move(numberOfPlaceToMove);
+    }
 
     public addPlayer(name: string) {
         this.players.push(new Player(name,this.console));

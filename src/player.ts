@@ -37,11 +37,6 @@ export class Player {
         return this._isInPenaltyBox;
     }
 
-    get isGettingOutOfPenaltyBox():boolean
-    {
-        return this._isGettingOutOfPenaltyBox;
-    }
-
     get numberOfTimeInPenaltyBox(): number
     {
         return this._numberOfTimeInPenaltyBox;

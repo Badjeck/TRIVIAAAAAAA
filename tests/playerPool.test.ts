@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {describe, beforeEach, it} from 'mocha';
+import { isExportDeclaration } from "typescript";
 import { PlayerPool } from "../src/playerPool"
 import { ConsoleSpy } from "../src/Utils/ConsoleSpy";
 
@@ -59,6 +60,10 @@ describe("playerPool Test", () => {
             })
         })
 
+        it("got current player place", ()=>{
+            playerPool.addPlayer('john');
 
+            expect(playerPool.getCurrentPlayerPlaces()).to.equal(0);
+        })
     })
 })

@@ -173,7 +173,7 @@ describe('The test environment', () => {
         expect(consoleSpy.content).to.includes("Ed leaves the game")
     });
     
-    it('player should leave prison', () => {
+    it('player should leave penalty box on a odd dice result', () => {
         const consoleSpy = new ConsoleSpy();
         const game = new Game(consoleSpy, Math);
         const players: string[] = ['Pet', 'Ed']
@@ -192,6 +192,27 @@ describe('The test environment', () => {
         game.roll(5)
 
         expect(consoleSpy.content).to.includes("Pet is getting out of the penalty box")
+    });
+
+    it('player should stay in penalty box on even dice result', () => {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, Math);
+        const players: string[] = ['Pet', 'Ed']
+
+        players.forEach((player) => game.addPlayer(player))
+        game.initGame();
+
+        game.roll(4)
+        game.wrongAnswer()
+
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box")
+        expect(consoleSpy.content).not.to.includes("Pet is getting out of the penalty box")
+
+        game.roll(4)
+        game.wasCorrectlyAnswered()
+        game.roll(4)
+
+        expect(consoleSpy.content).to.includes("Pet is not getting out of the penalty box")
     });
 
     it('should have a infinite deck', function () {

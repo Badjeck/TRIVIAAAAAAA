@@ -14,6 +14,7 @@ export class Game {
     private currentCategory = "";
     private numberOfPlayerToWin = 3;
     private math:IMath;
+    private _isCategoryForced: boolean;
 
     constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
         this.console = console;
@@ -21,7 +22,6 @@ export class Game {
         this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
-        this.currentCategory = this.newCurrentCategory()
     }
 
     public addPlayer(name: string) {
@@ -69,6 +69,7 @@ export class Game {
 
     public newCurrentCategory(forcedCategory: string = ""): string {
         if(forcedCategory !== "") {
+            this._isCategoryForced = true;
             return forcedCategory;
         } else {
             if (this.playerPool.getCurrentPlayerPlaces() == 0)
@@ -155,10 +156,14 @@ export class Game {
 
     private moveAndAskQuestion(roll:number)
     {
-        this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
-        if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
+        this.playerPool.moveCurrentPlayer(roll);
+
+        if(!this._isCategoryForced)
+        {
+            this.currentCategory = this.newCurrentCategory();
+            this._isCategoryForced = false
         }
+
         this.console.log(`${this.playerPool.getCurrentPlayerName()}'s new location is ${this.playerPool.getCurrentPlayerPlaces()}`);
         this.console.log("The category is " + this.currentCategory);
         this.questions.askQuestion(this.currentCategory);
