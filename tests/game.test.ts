@@ -575,9 +575,33 @@ describe('The test environment', () => {
         game.roll(2);
         game.wrongAnswer();
 
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box, 1 more room(s) available");
+        expect(consoleSpy.content).to.includes("Ed was sent to the penalty box, 0 more room(s) available, the next send in penalty box will switch with the first");
+        expect(consoleSpy.content).to.includes("Pet was set free because there are no more room available left in penalty box, so Chat switch with Pet");
+        expect(consoleSpy.content).to.includes("Chat was sent to the penalty box, 0 more room(s) available, the next send in penalty box will switch with the first");
 
-        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box, one more room available");
-        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box, no more room available, the next send in penalty box will switch with the first");
-        expect(consoleSpy.content).to.includes("Pet was set free because there are no room available left in penalty box, so Chat switch with Pet");
+    })
+
+    it('When a penalty box size is not define, then the new player will be add in penalty box', ()=> 
+    {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, Math);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+        game.addPlayer('Chat')
+        game.initGame()
+
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box");
+        expect(consoleSpy.content).to.includes("Ed was sent to the penalty box");
+        expect(consoleSpy.content).to.includes("Chat was sent to the penalty box");
+
     })
 });

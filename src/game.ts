@@ -81,7 +81,6 @@ export class Game {
     public wrongAnswer(nextCategory: string = ""): boolean {
         this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
-        this.console.log(this.playerPool.getCurrentPlayerName() + " was sent to the penalty box");
         this.playerPool.sendCurrentPlayerToPenaltyBox();
 
         this.playerPool.changeCurrentPlayer();

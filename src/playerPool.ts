@@ -6,6 +6,8 @@ export class PlayerPool {
     private _players : Array<Player> = [];
     private _currentPlayer : Player;
     private _leaderboard : Array<Player> = new Array();
+    private _penaltyBoxSlot: Array<Player> = [];
+    private _penaltyMaxSize: number;
 
     private console;
 
@@ -55,6 +57,28 @@ export class PlayerPool {
 
     public sendCurrentPlayerToPenaltyBox()
     {
+        let log = `${this.getCurrentPlayerName()} was sent to the penalty box`;
+        if(this._penaltyMaxSize > 0)
+        {
+            const slotAvailableInPenaltyBox = this._penaltyMaxSize - this._penaltyBoxSlot.length;
+            
+
+            log += `, ${slotAvailableInPenaltyBox > 0 ? slotAvailableInPenaltyBox -1 : 0} more room(s) available${slotAvailableInPenaltyBox <= 1 ? ", the next send in penalty box will switch with the first" : ""}`;
+
+            if(this._penaltyBoxSlot.length < this._penaltyMaxSize)
+            {
+                this._penaltyBoxSlot.push(this._currentPlayer);
+            }            
+            else
+            {
+                const freePlayer = this._penaltyBoxSlot.shift()!;
+                freePlayer.goOutPenaltyBox();
+                this._penaltyBoxSlot.push(this._currentPlayer);
+                this.console.log(`${freePlayer.name} was set free because there are no more room available left in penalty box, so ${this.getCurrentPlayerName()} switch with ${freePlayer.name}`);
+            }
+        }
+
+        this.console.log(log);
         this._currentPlayer.goInPenaltyBox();
     }
 
@@ -85,31 +109,9 @@ export class PlayerPool {
         if(this.players.length === 1)
             this._currentPlayer = this._players[0];
 
-    }
-    
-    public setCurrentPlayerInPenaltyBox(bool: boolean) {
-        this.inPenaltyBox[this.currentPlayer] = bool;
-        if(bool)
-            {
-                this._numberOfTimeInPenaltyBox[this.currentPlayer]++;
-                if(this._penaltyBoxSlot.length < this._penaltyMaxSize)
-                    this._penaltyBoxSlot.push(this._currentPlayer);
-                else
-                {
-                    const freePlayer = this._penaltyBoxSlot.shift()!;
-                    this.inPenaltyBox[freePlayer] = false;
-                    this._penaltyBoxSlot.push(this._currentPlayer);
-                    this.console.log(`${} was set free because there are no room available left in prison, so ${} switch with ${}`)
-                }
-                this.isGettingOutOfPenaltyBox = false;
-            }
-            
-        }
-
         this.console.log(name + " was added");
         this.console.log(`They are ${this.players.length} players`);
-
-    }
+    }    
 
     public changeCurrentPlayer() {
         const currentPlayerIndex = this.players.indexOf(this._currentPlayer);
