@@ -13,8 +13,8 @@ export class Game {
     private goldRequiredToWin= 6;
     private currentCategory = "";
     private numberOfPlayerToWin = 3;
-    private leaderboard : Array<string> = new Array();
     private math:IMath;
+    private _isCategoryForced: boolean;
 
     constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
         this.console = console;
@@ -22,12 +22,10 @@ export class Game {
         this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
         this.playerPool = new PlayerPool(console);
         this.setGoldRequiredToWin(goldRequiredToWin)
-        this.currentCategory = this.newCurrentCategory()
     }
 
-    public addPlayer(name: string): boolean {
-        this.playerPool.usedJoker[this.playerPool.howManyPlayers()] = false;
-        return this.playerPool.addPlayer(name)
+    public addPlayer(name: string) {
+         this.playerPool.addPlayer(name)
     }
 
     /**
@@ -44,36 +42,16 @@ export class Game {
         this.console.log(`${this.playerPool.getCurrentPlayerName()} have rolled a ${roll}`);
 
         if (this.playerPool.isCurrentPlayerIsInPenaltyBox()) {
-            if (roll % 2 != 0) {
-                const timesInPenaltyBox = this.playerPool.getTimesInPenaltyBox(this.playerPool.getCurrentPlayerName());
-                const getOutProbability = 1 / timesInPenaltyBox;
-                if (this.math.random() < getOutProbability) {
-                    this.playerPool.isGettingOutOfPenaltyBox = true;
-                    this.playerPool.setCurrentPlayerInPenaltyBox(false)
-                    this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
-
-                    this.moveAndAskQuestion(roll);
-                } else {
-                    this.console.log(this.playerPool.getCurrentPlayerName() + " is unlucky this time and stay in the penalty box");
-                    this.playerPool.isGettingOutOfPenaltyBox = false;
-                    return;
-                }
- 
-               
-            } else {
-                this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
-                this.playerPool.isGettingOutOfPenaltyBox = false;
-            }
+           this.tryToGoOutOfPenaltyBox(roll);
         } else {
-
             this.moveAndAskQuestion(roll);
-
         }
     }
     
 
     public newCurrentCategory(forcedCategory: string = ""): string {
         if(forcedCategory !== "") {
+            this._isCategoryForced = true;
             return forcedCategory;
         } else {
             if (this.playerPool.getCurrentPlayerPlaces() == 0)
@@ -104,7 +82,7 @@ export class Game {
         this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
         this.console.log(this.playerPool.getCurrentPlayerName() + " was sent to the penalty box");
-        this.playerPool.setCurrentPlayerInPenaltyBox(true);
+        this.playerPool.sendCurrentPlayerToPenaltyBox();
 
         this.playerPool.changeCurrentPlayer();
         this.currentCategory = this.newCurrentCategory(nextCategory);
@@ -113,21 +91,21 @@ export class Game {
     }
 
     public wasCorrectlyAnswered() {
-        if( this.playerPool.isCurrentPlayerIsInPenaltyBox() && !this.playerPool.isGettingOutOfPenaltyBox)
+        if(!this.playerPool.isCurrentPlayerCanPlay())
             this.playerPool.changeCurrentPlayer()
         else{
+            if(this.playerPool.isCurrentPlayerIsInPenaltyBox())
+                this.playerPool.currentPlayerGoOutOfPenaltyBox()
             this.console.log('Answer was correct!!!!');
             this.playerPool.currentPlayerAnswerRight(true);
             this.addPlayerToLeaderboardIfWin()
             this.playerPool.changeCurrentPlayer()
-            this.playerPool.isGettingOutOfPenaltyBox = false;
         }
         
     }
 
     public replay() {
         this.console.log("Game restarted !");
-        this.leaderboard = new Array();
         this.questions.replay();
         this.playerPool.replay();
     }
@@ -141,17 +119,7 @@ export class Game {
         this.playerPool.currentPlayerUseJoker();
     }
 
-    public isInPenaltyBox(): boolean[]
-    {
-        return this.playerPool.inPenaltyBox
-    }
-
-    public isGettingOutOfPenaltyBox(): boolean
-    {
-        return this.playerPool.isGettingOutOfPenaltyBox
-    }
-
-    public getPlayerPool() : PlayerPool {
+    public getPlayerPool(): PlayerPool {
         return this.playerPool
     }
 
@@ -163,14 +131,21 @@ export class Game {
         return this.numberOfPlayerToWin;
     }
 
-    public getLeaderboardSize():number {return this.leaderboard.length;}
+    public getLeaderboardSize():number
+    {
+        return this.playerPool.getLeaderboardSize();
+    }
 
     private moveAndAskQuestion(roll:number)
     {
-        this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() + roll);
-        if (this.playerPool.getCurrentPlayerPlaces() > 11) {
-            this.playerPool.setCurrentPlayerPlaces(this.playerPool.getCurrentPlayerPlaces() - 12);
+        this.playerPool.moveCurrentPlayer(roll);
+
+        if(!this._isCategoryForced)
+        {
+            this.currentCategory = this.newCurrentCategory();
+            this._isCategoryForced = false
         }
+
         this.console.log(`${this.playerPool.getCurrentPlayerName()}'s new location is ${this.playerPool.getCurrentPlayerPlaces()}`);
         this.console.log("The category is " + this.currentCategory);
         this.questions.askQuestion(this.currentCategory);
@@ -178,7 +153,7 @@ export class Game {
 
     private isGameFinished():boolean
     {
-        return this.leaderboard.length >= this.numberOfPlayerToWin;
+        return this.playerPool.getLeaderboardSize() >= this.numberOfPlayerToWin;
     }
 
     private defineNumberOfPlayerToWin() {
@@ -187,7 +162,7 @@ export class Game {
     }
 
     private setGoldRequiredToWin(gold) {
-        if(gold >= 6) {
+        if (gold >= 6) {
             this.goldRequiredToWin = gold;
         } 
     }
@@ -202,13 +177,13 @@ export class Game {
     private endGame()
     {
         this.console.log("The game is now over ! Now the rank of the top player");
-        this.leaderboard.forEach((playerName, index) => {
-            this.console.log(`The player n°${index+1} is ${playerName} !`);
+        this.playerPool.leaderboard.forEach((player, index) => {
+            this.console.log(`The player n°${index+1} is ${player.name} !`);
         });
         this.console.log("The following player(s) could not win in time !");
-        this.playerPool.players.filter(playerName => -1 === this.leaderboard.indexOf(playerName)).forEach(playerName=>
+        this.playerPool.players.filter(player => -1 === this.playerPool.leaderboard.indexOf(player)).forEach(player=>
             {
-                this.console.log(`The player ${playerName} lose with ${this.playerPool.getPurseOfPlayer(playerName)} Gold coin(s) !`)
+                this.console.log(`The player ${player.name} lose with ${player.purse} Gold coin(s) !`)
             })
     }
 
@@ -216,7 +191,7 @@ export class Game {
     {
         if(this.isPlayerHadEnoughCoinToWin())
         {
-            this.leaderboard.push(this.playerPool.getCurrentPlayerName());
+            this.playerPool.addCurrentPlayerToLeaderboard();
             if(this.isGameFinished())
                 this.endGame();
         }
@@ -226,5 +201,27 @@ export class Game {
         return this.playerPool.getCurrentPlayerPurses() >= this.goldRequiredToWin
     }
 
+    private tryToGoOutOfPenaltyBox(roll:number)
+    {
+        if (roll % 2 != 0) {
+            if (this.gotLuckToGoOutOfPenaltyBox()) {
+                this.playerPool.currentPlayerIsGettingOutOfPenaltyBox(true);
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is getting out of the penalty box");
+                this.moveAndAskQuestion(roll);
+            } else {
+                this.console.log(this.playerPool.getCurrentPlayerName() + " is unlucky this time and stay in the penalty box");
+            }           
+        } else {
+            this.console.log(this.playerPool.getCurrentPlayerName() + " is not getting out of the penalty box");
+        }
+    }
+
+    private gotLuckToGoOutOfPenaltyBox(): boolean
+    {
+        const timesInPenaltyBox = this.playerPool.getCurrentPlayerTimesInPenaltyBox();
+        const getOutProbability = 1 / timesInPenaltyBox;
+
+        return this.math.random() < getOutProbability;
+    }
 
 }

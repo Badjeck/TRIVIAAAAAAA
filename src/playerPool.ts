@@ -1,188 +1,132 @@
+import { Player } from "./player";
 import {IConsole} from "./Utils/IConsole";
 
 export class PlayerPool {
 
-    private _players: Array<string> = [];
-    private _places: Array<number> = [];
-    private _purses: Array<number> = [];
-    private _inPenaltyBox: Array<boolean> = [];
-    private _extraGold: Array<number> = [];
-    private _usedJoker: Array<boolean> = [];
-    private _numberOfTimeInPenaltyBox: Array<number> = [];
-    private _currentPlayer: number = 0;
-    private _isGettingOutOfPenaltyBox: boolean = false;
+    private _players : Array<Player> = [];
+    private _currentPlayer : Player;
+    private _leaderboard : Array<Player> = new Array();
+
     private console;
 
     constructor(console: IConsole) {
         this.console = console;
     }
 
-    get players(): Array<string> {
+
+    get players(): Array<Player> {
         return this._players;
     }
 
-    get places(): Array<number> {
-        return this._places;
+    get leaderboard():Array<Player> 
+    {
+        return this._leaderboard;
     }
 
-    get purses(): Array<number> {
-        return this._purses;
+    public getCurrentPlayerName() : string {
+        return this._currentPlayer.name;
     }
 
-    get inPenaltyBox(): Array<boolean> {
-        return this._inPenaltyBox;
+    public removeCurrentPlayer() {
+        this.players.splice(this.players.indexOf(this._currentPlayer), 1)
     }
 
-    get usedJoker(): Array<boolean> {
-        return this._usedJoker;
+    public isCurrentPlayerIsInPenaltyBox() {
+        return this._currentPlayer.isInPenaltyBox;
     }
 
-    get currentPlayer(): number {
-        return this._currentPlayer;
+    public getCurrentPlayerPlaces() {
+        return this._currentPlayer.place
     }
 
-    set currentPlayer(value: number) {
-        this._currentPlayer = value;
+    public getCurrentPlayerPurses() {
+        return this._currentPlayer.purse;
     }
 
-    get isGettingOutOfPenaltyBox(): boolean {
-        return this._isGettingOutOfPenaltyBox;
-    }
-
-    set isGettingOutOfPenaltyBox(value: boolean) {
-        this._isGettingOutOfPenaltyBox = value;
-    }
-
-    public getTimesInPenaltyBox(playerName: string): number {
-        const playerIndex = this.players.indexOf(playerName);
-        if (playerIndex === -1) {
-            throw new Error(`Player ${playerName} not found in the player pool`);
-        }
-        return this._numberOfTimeInPenaltyBox[playerIndex];
+    public getCurrentPlayerTimesInPenaltyBox(): number {
+        return this._currentPlayer.numberOfTimeInPenaltyBox;
     }
 
     public howManyPlayers(): number {
         return this.players.length;
     }
 
-    public addPlayer(name: string): boolean {
-        this.places[this.howManyPlayers()] = 0;
-        this.purses[this.howManyPlayers()] = 0;
-        this._extraGold[this.howManyPlayers()] = 0;
-        this._numberOfTimeInPenaltyBox[this.howManyPlayers()] = 0;
-        this.players.push(name);
-        this.inPenaltyBox[this.howManyPlayers()] = false;
+    public sendCurrentPlayerToPenaltyBox()
+    {
+        this._currentPlayer.goInPenaltyBox();
+    }
+
+    public currentPlayerIsGettingOutOfPenaltyBox(bool: boolean)
+    {
+        this._currentPlayer.isGettingOutOfPenaltyBox = bool;
+    }
+
+    public isCurrentPlayerCanPlay():boolean
+    {
+        return this._currentPlayer.isPlayerCanPlay();
+    }
+
+    public currentPlayerGoOutOfPenaltyBox()
+    {
+        this._currentPlayer.goOutPenaltyBox();
+    }
+
+    public getLeaderboardSize():number {return this._leaderboard.length;}
+
+
+    public moveCurrentPlayer(numberOfPlaceToMove: number) {
+        this._currentPlayer.move(numberOfPlaceToMove);
+    }
+
+    public addPlayer(name: string) {
+        this.players.push(new Player(name,this.console));
+        if(this.players.length === 1)
+            this._currentPlayer = this._players[0];
 
         this.console.log(name + " was added");
-        this.console.log("They are player number " + this.players.length);
+        this.console.log(`They are ${this.players.length} players`);
 
-        return true;
     }
-
-    getCurrentPlayerName() {
-        return this.players[this._currentPlayer];
-    }
-
-    public removeCurrentPlayer() {
-        this.players.splice(this.currentPlayer, 1)
-    }
-
-    public isCurrentPlayerIsInPenaltyBox() {
-        return this.inPenaltyBox[this.currentPlayer];
-    }
-
-    public getCurrentPlayerPlaces() {
-        return this.places[this.currentPlayer]
-    }
-
-    public setCurrentPlayerPlaces(newPlace: number) {
-        this.places[this.currentPlayer] = newPlace;
-    }
-
-    public getCurrentPlayerPurses() {
-        return this.purses[this.currentPlayer];
-    }
-
-    public setCurrentPlayerInPenaltyBox(bool: boolean) {
-        this.inPenaltyBox[this.currentPlayer] = bool;
-        if(bool)
-            {
-                this._numberOfTimeInPenaltyBox[this.currentPlayer]++;
-                this.isGettingOutOfPenaltyBox = false;
-            }
-            
-        }
 
     public changeCurrentPlayer() {
-        this.currentPlayer += 1;
-        if (this.currentPlayer == this.players.length)
-            this.currentPlayer = 0;
+        const currentPlayerIndex = this.players.indexOf(this._currentPlayer);
+        const nextPlayerIndex = (currentPlayerIndex + 1) % this._players.length;
+        this._currentPlayer = this.players[nextPlayerIndex]
     }
-
-    public getCurrentPlayerExtraGold(): number
-    {
-        return this._extraGold[this._currentPlayer]
-    }
-
+  
     public currentPlayerAnswerRight(isCorrect : boolean)
     {
         if(isCorrect){
-            this.addCoinToCurrentPlayerPurses();
-            this._extraGold[this._currentPlayer]++;
+            this._currentPlayer.addCoins();
+            this._currentPlayer.addExtraGold(1);
         }
         else
-            this._extraGold[this._currentPlayer] = 0;
-    }
-
-    public getPurseOfPlayer(playerName : string):number
-    {
-         const playerIndex = this._players.indexOf(playerName);
-         if(playerIndex === -1)
-            throw new Error("Player not found");
-        return this.purses[playerIndex]
-    }
-
-    private addCoinToCurrentPlayerPurses() {
-        const player : string= this.getCurrentPlayerName();
-        const extraGold = this.getCurrentPlayerExtraGold()
-        const coinsGains = 1 + extraGold;
-        this.purses[this.currentPlayer] += coinsGains;
-        const playerCurrentPurse = this.purses[this.currentPlayer]; 
-        if(extraGold > 0)
-            this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) with ${extraGold} bonus Gold Coin(s) with the win in a row, ${player} now has ${playerCurrentPurse} Gold Coin(s).`)
-        else
-            this.console.log(`${player} now has gain ${coinsGains} Gold Coin(s) and now has ${playerCurrentPurse} Gold Coin(s).`)
-
+            this._currentPlayer.resetExtraGold();
     }
 
     public currentPlayerUseJoker(): void {
 
-        if (this.isCurrentPlayerUsedJoker()) {
+        if (this._currentPlayer.hasUsedJoker) {
             this.console.log(this.getCurrentPlayerName() + " already used a Joker.");
         } else {
-            this.setCurrentPlayerUseJoker(true);
+            this._currentPlayer.useJoker();
             this.console.log(this.getCurrentPlayerName() + " used a Joker.");
             this.changeCurrentPlayer();
         }
     }
 
+    public addCurrentPlayerToLeaderboard() {
+        this._leaderboard.push(this._currentPlayer);
+    }
+
     public replay() {
-        this.players.forEach((player, index)=>{
-            this._places[index] = 0;
-            this._purses[index] = 0;
-            this._inPenaltyBox[index] = false;
-            this._extraGold[index] = 0;
-            this._usedJoker[index] = false;
+        this.players.forEach((player,)=>{
+            player.replay();
         });
 
-        this._currentPlayer = 0;
+        this._currentPlayer = this._players[0];
+        this._leaderboard = new Array();
+
     }
 
-    private setCurrentPlayerUseJoker(used : boolean){
-        this._usedJoker[this._currentPlayer] = used;
-    }
-
-    private isCurrentPlayerUsedJoker():boolean {
-        return this._usedJoker[this._currentPlayer]
-    }
 }
