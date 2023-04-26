@@ -9,7 +9,9 @@ export class PlayerPool {
 
     private console;
 
-    constructor(console: IConsole) {
+    constructor(console: IConsole, numberOfSlotInPenaltyBox = 0) {
+        this._penaltyBoxSlot = new Array();
+        this._penaltyMaxSize = numberOfSlotInPenaltyBox
         this.console = console;
     }
 
@@ -82,6 +84,27 @@ export class PlayerPool {
         this.players.push(new Player(name,this.console));
         if(this.players.length === 1)
             this._currentPlayer = this._players[0];
+
+    }
+    
+    public setCurrentPlayerInPenaltyBox(bool: boolean) {
+        this.inPenaltyBox[this.currentPlayer] = bool;
+        if(bool)
+            {
+                this._numberOfTimeInPenaltyBox[this.currentPlayer]++;
+                if(this._penaltyBoxSlot.length < this._penaltyMaxSize)
+                    this._penaltyBoxSlot.push(this._currentPlayer);
+                else
+                {
+                    const freePlayer = this._penaltyBoxSlot.shift()!;
+                    this.inPenaltyBox[freePlayer] = false;
+                    this._penaltyBoxSlot.push(this._currentPlayer);
+                    this.console.log(`${} was set free because there are no room available left in prison, so ${} switch with ${}`)
+                }
+                this.isGettingOutOfPenaltyBox = false;
+            }
+            
+        }
 
         this.console.log(name + " was added");
         this.console.log(`They are ${this.players.length} players`);

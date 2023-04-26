@@ -16,11 +16,11 @@ export class Game {
     private math:IMath;
     private _isCategoryForced: boolean;
 
-    constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
+    constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50, numberOfSlotInPenaltyBox = 0) {
         this.console = console;
         this.math= math;
         this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
-        this.playerPool = new PlayerPool(console);
+        this.playerPool = new PlayerPool(console, numberOfSlotInPenaltyBox);
         this.setGoldRequiredToWin(goldRequiredToWin)
     }
 
