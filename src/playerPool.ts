@@ -16,8 +16,7 @@ export class PlayerPool {
         this._penaltyMaxSize = numberOfSlotInPenaltyBox
         this.console = console;
     }
-
-
+    
     get players(): Array<Player> {
         return this._players;
     }
@@ -45,8 +44,9 @@ export class PlayerPool {
 
     public getCurrentPlayerPurses() {
         return this._currentPlayer.purse;
+    
     }
-
+    
     public getCurrentPlayerTimesInPenaltyBox(): number {
         return this._currentPlayer.numberOfTimeInPenaltyBox;
     }
@@ -98,7 +98,6 @@ export class PlayerPool {
     }
 
     public getLeaderboardSize():number {return this._leaderboard.length;}
-
 
     public moveCurrentPlayer(numberOfPlaceToMove: number) {
         this._currentPlayer.move(numberOfPlaceToMove);
