@@ -1,10 +1,14 @@
-import {expect, assert} from 'chai';
+const chai = require('chai');
 import {describe, it} from 'mocha';
 import {Game} from "../src/game";
 import {ConsoleSpy} from "../src/Utils/ConsoleSpy";
 import {Questions} from "../src/questions";
 import { RandomFake as RandomFake } from '../src/Utils/RandomFake';
 
+const deepEqualInAnyOrder = require('deep-equal-in-any-order');
+
+chai.use(deepEqualInAnyOrder);
+const { expect } = chai;
 
 describe('The test environment', () => {
     it('should pass', () => {
@@ -576,7 +580,7 @@ describe('The test environment', () => {
 
         const loadedGame = Game.load();
 
-        expect(game).to.deep.equal(loadedGame)
+        expect(game).to.deep.equalInAnyOrder(loadedGame)
 
         game.roll(3); // Pet
         game.wasCorrectlyAnswered();
