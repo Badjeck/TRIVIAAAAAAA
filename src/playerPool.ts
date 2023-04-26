@@ -6,14 +6,17 @@ export class PlayerPool {
     private _players : Array<Player> = [];
     private _currentPlayer : Player;
     private _leaderboard : Array<Player> = new Array();
+    private _penaltyBoxSlot: Array<Player> = [];
+    private _penaltyMaxSize: number;
 
     private console;
 
-    constructor(console: IConsole) {
+    constructor(console: IConsole, numberOfSlotInPenaltyBox = 0) {
+        this._penaltyBoxSlot = new Array();
+        this._penaltyMaxSize = numberOfSlotInPenaltyBox
         this.console = console;
     }
-
-
+    
     get players(): Array<Player> {
         return this._players;
     }
@@ -41,8 +44,9 @@ export class PlayerPool {
 
     public getCurrentPlayerPurses() {
         return this._currentPlayer.purse;
+    
     }
-
+    
     public getCurrentPlayerTimesInPenaltyBox(): number {
         return this._currentPlayer.numberOfTimeInPenaltyBox;
     }
@@ -53,6 +57,28 @@ export class PlayerPool {
 
     public sendCurrentPlayerToPenaltyBox()
     {
+        let log = `${this.getCurrentPlayerName()} was sent to the penalty box`;
+        if(this._penaltyMaxSize > 0)
+        {
+            const slotAvailableInPenaltyBox = this._penaltyMaxSize - this._penaltyBoxSlot.length;
+            
+
+            log += `, ${slotAvailableInPenaltyBox > 0 ? slotAvailableInPenaltyBox -1 : 0} more room(s) available${slotAvailableInPenaltyBox <= 1 ? ", the next send in penalty box will switch with the first" : ""}`;
+
+            if(this._penaltyBoxSlot.length < this._penaltyMaxSize)
+            {
+                this._penaltyBoxSlot.push(this._currentPlayer);
+            }            
+            else
+            {
+                const freePlayer = this._penaltyBoxSlot.shift()!;
+                freePlayer.goOutPenaltyBox();
+                this._penaltyBoxSlot.push(this._currentPlayer);
+                this.console.log(`${freePlayer.name} was set free because there are no more room available left in penalty box, so ${this.getCurrentPlayerName()} switch with ${freePlayer.name}`);
+            }
+        }
+
+        this.console.log(log);
         this._currentPlayer.goInPenaltyBox();
     }
 
@@ -73,7 +99,6 @@ export class PlayerPool {
 
     public getLeaderboardSize():number {return this._leaderboard.length;}
 
-
     public moveCurrentPlayer(numberOfPlaceToMove: number) {
         this._currentPlayer.move(numberOfPlaceToMove);
     }
@@ -85,8 +110,7 @@ export class PlayerPool {
 
         this.console.log(name + " was added");
         this.console.log(`They are ${this.players.length} players`);
-
-    }
+    }    
 
     public changeCurrentPlayer() {
         const currentPlayerIndex = this.players.indexOf(this._currentPlayer);

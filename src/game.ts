@@ -16,11 +16,11 @@ export class Game {
     private math:IMath;
     private _isCategoryForced: boolean;
 
-    constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50) {
+    constructor(console : IConsole,math:IMath, isTechnoEnabled = false, goldRequiredToWin?:number, numberOfQuestion = 50, numberOfSlotInPenaltyBox = 0) {
         this.console = console;
         this.math= math;
         this.questions = new Questions(numberOfQuestion, console, isTechnoEnabled);
-        this.playerPool = new PlayerPool(console);
+        this.playerPool = new PlayerPool(console, numberOfSlotInPenaltyBox);
         this.setGoldRequiredToWin(goldRequiredToWin)
     }
 
@@ -81,7 +81,6 @@ export class Game {
     public wrongAnswer(nextCategory: string = ""): boolean {
         this.playerPool.currentPlayerAnswerRight(false);
         this.console.log('Question was incorrectly answered');
-        this.console.log(this.playerPool.getCurrentPlayerName() + " was sent to the penalty box");
         this.playerPool.sendCurrentPlayerToPenaltyBox();
 
         this.playerPool.changeCurrentPlayer();

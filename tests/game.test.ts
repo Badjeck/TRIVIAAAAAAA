@@ -318,6 +318,7 @@ describe('The test environment', () => {
 
         game.addPlayer('Pet')
         game.addPlayer('Ed')
+        game.initGame()
 
         game.roll(3);
         game.currentPlayerTryUseJoker();
@@ -555,4 +556,52 @@ describe('The test environment', () => {
         expect(countedLog["Pet is getting out of the penalty box"],"Pet is getting out of the penalty box").to.equals(2);
         expect(countedLog["Pet is unlucky this time and stay in the penalty box"], "Pet is unlucky this time and stay in the penalty box").to.equals(1);
     });
+
+
+    it('When a penalty box size is define and the number of player in penalty box match, then the new player to go in the replace the first in', ()=> 
+    {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, Math,false,undefined,10,2);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+        game.addPlayer('Chat')
+        game.initGame()
+
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box, 1 more room(s) available");
+        expect(consoleSpy.content).to.includes("Ed was sent to the penalty box, 0 more room(s) available, the next send in penalty box will switch with the first");
+        expect(consoleSpy.content).to.includes("Pet was set free because there are no more room available left in penalty box, so Chat switch with Pet");
+        expect(consoleSpy.content).to.includes("Chat was sent to the penalty box, 0 more room(s) available, the next send in penalty box will switch with the first");
+
+    })
+
+    it('When a penalty box size is not define, then the new player will be add in penalty box', ()=> 
+    {
+        const consoleSpy = new ConsoleSpy();
+        const game = new Game(consoleSpy, Math);
+
+        game.addPlayer('Pet')
+        game.addPlayer('Ed')
+        game.addPlayer('Chat')
+        game.initGame()
+
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+        game.roll(2);
+        game.wrongAnswer();
+
+        expect(consoleSpy.content).to.includes("Pet was sent to the penalty box");
+        expect(consoleSpy.content).to.includes("Ed was sent to the penalty box");
+        expect(consoleSpy.content).to.includes("Chat was sent to the penalty box");
+
+    })
 });
