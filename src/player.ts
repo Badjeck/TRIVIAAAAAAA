@@ -1,6 +1,22 @@
 import { IConsole } from "./Utils/IConsole";
 
 export class Player {
+
+    public static clone(player:Player) : Player
+    {
+        const newPlayer = new Player(player.name,player._console);
+
+        newPlayer._place = player._place;
+        newPlayer._purse = player._purse;
+        newPlayer._isInPenaltyBox = player._isInPenaltyBox;
+        newPlayer._isGettingOutOfPenaltyBox = player._isGettingOutOfPenaltyBox;
+        newPlayer._numberOfTimeInPenaltyBox = player._numberOfTimeInPenaltyBox;
+        newPlayer._hasUsedJoker =player._hasUsedJoker;
+        newPlayer._extraGold =player._extraGold;
+    
+        return newPlayer
+    }
+
     private _name : string;
     private _place = 0;
     private _purse = 0;

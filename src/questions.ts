@@ -2,6 +2,20 @@ import {IConsole} from "./Utils/IConsole";
 
 export class Questions {
 
+    public static clone(question:Questions) : Questions
+    {
+        const newQuestion = new Questions(1,question.console);
+        newQuestion._popQuestions = question._popQuestions;
+        newQuestion._scienceQuestions = question._scienceQuestions;
+        newQuestion._sportsQuestions = question._sportsQuestions;
+        newQuestion._rockQuestions = question._rockQuestions;
+        newQuestion._technoQuestions = question._technoQuestions;
+        newQuestion._isTechnoQuestionsEnabled = question._isTechnoQuestionsEnabled;
+        newQuestion._numberOfQuestion = question. _numberOfQuestion;
+
+        return newQuestion;
+    }
+
     private console: IConsole;
     private _popQuestions: Array<String> = [];
     private _scienceQuestions: Array<String> = [];

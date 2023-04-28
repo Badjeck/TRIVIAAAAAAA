@@ -9,11 +9,20 @@ export class Game {
     private static savePath = "save/game.save.json";
 
     public static load() : Game{
-        return (JSON.parse(readFileSync(Game.savePath,"utf8")))
+        const tmpObj =  (JSON.parse(readFileSync(Game.savePath,"utf8"))) as Game;
+        const newGame = new Game(tmpObj._console);
+        newGame.questions = Questions.clone(tmpObj.questions);
+        newGame.playerPool = PlayerPool.clone(tmpObj.playerPool);
+        newGame.goldRequiredToWin = tmpObj.goldRequiredToWin;
+        newGame.currentCategory = tmpObj.currentCategory;
+        newGame.numberOfPlayerToWin = tmpObj.numberOfPlayerToWin;
+        newGame._isCategoryForced = tmpObj._isCategoryForced;
+        
+        return newGame;
     }
 
-    private readonly questions: Questions;
-    private readonly playerPool: PlayerPool;
+    private questions: Questions;
+    private playerPool: PlayerPool;
     private _console: IConsole;
     private goldRequiredToWin= 6;
     private currentCategory = "";

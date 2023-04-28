@@ -3,6 +3,20 @@ import {IConsole} from "./Utils/IConsole";
 
 export class PlayerPool {
 
+    public static clone(playerPool:PlayerPool) : PlayerPool
+    {
+        const newPlayerPool = new PlayerPool(playerPool.console);
+        const players: Array<Player> =[] 
+        playerPool._players.forEach(element => {
+            players.push(Player.clone(element));
+        });
+        newPlayerPool._players = playerPool._players;
+        newPlayerPool._currentPlayer = playerPool._currentPlayer;
+        newPlayerPool._leaderboard = playerPool._leaderboard;
+
+        return newPlayerPool;
+    }
+
     private _players : Array<Player> = [];
     private _currentPlayer : Player;
     private _leaderboard : Array<Player> = new Array();
